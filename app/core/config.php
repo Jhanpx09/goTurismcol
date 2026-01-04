@@ -8,7 +8,7 @@ return [
     'charset' => 'utf8mb4',
   ],
   'app' => [
-    'base_url' => 'http://localhost/umb_viajes_app/public',
+    'base_url' => 'http://localhost/goturismcol/public',
     'app_name' => 'Planificación de Viajes',
   ],
   'security' => [
