@@ -100,15 +100,6 @@ $avisos = $pdo->query("
         </div>
       </div>
 
-      <div class="mt-4 card border-0">
-        <div class="card-body p-0 text-secondary small">
-          <strong>Acceso rápido:</strong>
-          <ul class="mb-0">
-            <li>Admin: <code>admin@umb.local</code> / <code>Admin123!</code></li>
-            <li>Panel: <?= e(base_url('admin/index.php')) ?></li>
-          </ul>
-        </div>
-      </div>
     </div>
   </div>
 </main>
