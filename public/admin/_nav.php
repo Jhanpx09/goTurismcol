@@ -1,7 +1,10 @@
 <?php require_once __DIR__ . '/_admin_guard.php'; ?>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg top-nav">
   <div class="container">
-    <a class="navbar-brand" href="<?= e(base_url('admin/index.php')) ?>">Panel admin</a>
+    <a class="navbar-brand" href="<?= e(base_url('admin/index.php')) ?>">
+      <span class="brand-logo" aria-hidden="true">AD</span>
+      <span class="brand-text">Panel admin</span>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navAdmin">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,9 +15,9 @@
         <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/experiencias.php')) ?>">Experiencias</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/avisos.php')) ?>">Avisos</a></li>
       </ul>
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="<?= e(base_url('index.php')) ?>">Ver sitio</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?= e(base_url('logout.php')) ?>">Salir</a></li>
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+        <li class="nav-item"><a class="btn btn-outline-secondary btn-sm nav-btn" href="<?= e(base_url('index.php')) ?>">Ver sitio</a></li>
+        <li class="nav-item"><a class="btn btn-primary btn-sm nav-btn" href="<?= e(base_url('logout.php')) ?>">Salir</a></li>
       </ul>
     </div>
   </div>
