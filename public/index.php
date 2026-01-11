@@ -28,12 +28,19 @@ $avisos = $pdo->query("
 <?php include __DIR__ . '/../app/views/partials/nav.php'; ?>
 
 <main class="container py-4">
-  <div class="p-4 p-md-5 mb-4 rounded bg-light border">
-    <h1 class="display-6 mb-2">Planificación de viajes con información organizada</h1>
-    <p class="mb-0 text-secondary">
-      Consulta requisitos y trámites por destino, revisa experiencias de otros viajeros y publica la tuya (con moderación).
-    </p>
-  </div>
+  <section class="hero-banner mb-4">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Planificación de viajes con información organizada</h1>
+        <p>
+          Consulta requisitos y trámites por destino, revisa experiencias de otros viajeros y publica la tuya (con moderación).
+        </p>
+      </div>
+      <div class="hero-art">
+        <div class="image-placeholder image-placeholder--hero">Imagen 420 × 240</div>
+      </div>
+    </div>
+  </section>
 
   <div class="row g-4">
     <div class="col-lg-7">
@@ -61,7 +68,7 @@ $avisos = $pdo->query("
         </div>
       </div>
 
-      <div class="mt-4 card shadow-sm">
+      <div class="mt-4 card shadow-sm experience-card">
         <div class="card-body">
           <h2 class="h5">Experiencias de viajeros</h2>
           <p class="text-secondary mb-3">Solo se muestra contenido aprobado por moderación.</p>
@@ -76,9 +83,12 @@ $avisos = $pdo->query("
     </div>
 
     <div class="col-lg-5">
-      <div class="card shadow-sm">
+      <div class="card shadow-sm notice-card">
         <div class="card-body">
-          <h2 class="h5">Avisos de actualización</h2>
+          <div class="d-flex align-items-center gap-3">
+            <span class="notice-icon" aria-hidden="true">🔔</span>
+            <h2 class="h5 mb-0">Avisos de actualización</h2>
+          </div>
           <?php if (!$avisos): ?>
             <p class="text-secondary mb-0">No hay avisos recientes.</p>
           <?php else: ?>
@@ -100,6 +110,11 @@ $avisos = $pdo->query("
         </div>
       </div>
 
+      <div class="card shadow-sm mt-4">
+        <div class="card-body">
+          <div class="image-placeholder image-placeholder--wide">Imagen 360 × 210</div>
+        </div>
+      </div>
     </div>
   </div>
 </main>

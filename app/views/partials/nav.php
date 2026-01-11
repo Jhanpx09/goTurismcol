@@ -3,9 +3,12 @@ require_once __DIR__ . '/../../core/helpers.php';
 start_session();
 $u = current_user();
 ?>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg top-nav">
   <div class="container">
-    <a class="navbar-brand" href="<?= e(base_url('index.php')) ?>"><?= e(config('app.app_name')) ?></a>
+    <a class="navbar-brand" href="<?= e(base_url('index.php')) ?>">
+      <span class="brand-logo" aria-hidden="true">GT</span>
+      <span class="brand-text"><?= e(config('app.app_name')) ?></span>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -16,16 +19,16 @@ $u = current_user();
         <li class="nav-item"><a class="nav-link" href="<?= e(base_url('experiencias.php')) ?>">Experiencias</a></li>
       </ul>
 
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
         <?php if ($u): ?>
           <?php if (has_role('Administrador')): ?>
             <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/index.php')) ?>">Panel admin</a></li>
           <?php endif; ?>
-          <li class="nav-item"><span class="navbar-text me-2"><?= e($u['correo']) ?></span></li>
-          <li class="nav-item"><a class="nav-link" href="<?= e(base_url('logout.php')) ?>">Salir</a></li>
+          <li class="nav-item"><span class="navbar-text me-2 text-secondary fw-semibold"><?= e($u['correo']) ?></span></li>
+          <li class="nav-item"><a class="btn btn-outline-secondary btn-sm nav-btn" href="<?= e(base_url('logout.php')) ?>">Salir</a></li>
         <?php else: ?>
-          <li class="nav-item"><a class="nav-link" href="<?= e(base_url('login.php')) ?>">Iniciar sesión</a></li>
-          <li class="nav-item"><a class="nav-link" href="<?= e(base_url('register.php')) ?>">Registrarse</a></li>
+          <li class="nav-item"><a class="btn btn-primary btn-sm nav-btn" href="<?= e(base_url('login.php')) ?>">Iniciar sesión</a></li>
+          <li class="nav-item"><a class="btn btn-success btn-sm nav-btn" href="<?= e(base_url('register.php')) ?>">Registrarse</a></li>
         <?php endif; ?>
       </ul>
     </div>
