@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 return [
   'db' => [
     'host' => '127.0.0.1',
@@ -8,8 +8,8 @@ return [
     'charset' => 'utf8mb4',
   ],
   'app' => [
-    'base_url' => 'http://localhost/goturismcol/public',
-    'app_name' => 'Planificación de Viajes',
+    'base_url' => 'http://localhost/goTurismcol/public',
+    'app_name' => 'goTurismCol',
   ],
   'security' => [
     'session_name' => 'UMB_VIAJES_SESS',

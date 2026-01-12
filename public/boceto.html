@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>goTurismCol - Planifica tu viaje a Colombia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3b82f6", // Trustworthy Blue
+              secondary: "#84cc16", // Vibrant Green for CTAs
+              "background-light": "#f8fafc",
+              "background-dark": "#0f172a",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+              'xl': '1.5rem',
+            },
+          },
+        },
+      };
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient {
+            background: linear-gradient(135deg, #e0f2fe 0%, #fff7ed 100%);
+        }
+        .dark .hero-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 transition-colors duration-300">
+<header class="sticky top-4 z-50 mx-auto max-w-7xl px-4">
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border border-white/20 dark:border-slate-700 shadow-lg rounded-2xl px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="bg-gradient-to-tr from-yellow-400 via-blue-500 to-red-500 p-2 rounded-lg">
+<span class="material-icons-outlined text-white">beach_access</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    go<span class="text-primary">Turism</span><span class="text-secondary">Col</span>
+</span>
+</div>
+<div class="hidden md:flex items-center space-x-8 font-medium">
+<a class="hover:text-primary transition-colors" href="#">Requisitos</a>
+<a class="hover:text-primary transition-colors" href="#">Experiencias</a>
+<a class="hover:text-primary transition-colors" href="#">Destinos</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors">Iniciar sesión</button>
+<button class="bg-secondary hover:bg-lime-600 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-md shadow-lime-500/20 transition-all hover:scale-105">
+                    Registrarse
+                </button>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined text-slate-500 dark:text-slate-400">dark_mode</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+<section class="relative rounded-3xl overflow-hidden min-h-[400px] flex items-center shadow-xl">
+<img alt="Beautiful Colombian Landscape" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDcT0kqDnARsznVLNhR_w6B5yM-LuW-Vo-LisP1LI8Hi3BIlu3vUQnaS8bZVs1z4HD8hp_AFjkGB0mHriI59R3sO747sr6uzYca8xLQ6ZDo58YTLxlAuRKcdyY2bSutnw7t820l7rKFCu3kR6T_ppE8SHh3dHkg3GNtI2YmzCU9FabScO7VakFruf3lk2LIkfHqm3UBIMAdwdj_9Zc-nDZlL8FFT7wgS-3Sz6vNmx6mtac3AWJr3DzxamwL5nI18Kh_oS7RpbnldLa"/>
+<div class="absolute inset-0 bg-gradient-to-r from-white/90 via-white/40 to-transparent dark:from-slate-950/90 dark:via-slate-950/40"></div>
+<div class="relative z-10 p-8 md:p-16 max-w-2xl">
+<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white leading-tight mb-4">
+                    Planificación de viajes con información organizada
+                </h1>
+<p class="text-lg text-slate-700 dark:text-slate-300 mb-8 leading-relaxed">
+                    Consulta requisitos y trámites por destino, revisa experiencias de otros viajeros y publica la tuya de forma segura y moderada.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
+<span class="material-icons-outlined">explore</span>
+                        Empezar ahora
+                    </button>
+</div>
+</div>
+<div class="absolute bottom-8 right-8 hidden md:block bg-white/20 backdrop-blur-md p-4 rounded-2xl border border-white/30">
+<div class="flex items-center gap-3">
+<img alt="Colombia Flag" class="w-10 h-6 rounded shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdcdQFzHXcdOapOSsE5IwrjWDA0ORveS9rKC5f091jIPUBtqijCp-siL-BVyNGG6uG7e1C7xUr-oVq9kUBOEd2Q7G9fTZNh7TxDCM5cUL7LvRW0Fg88Ix5AyeH4yxxSYNcfgHA7UEJb0LX9hkpz4uNr_CuWSpAWJkc2f5T5RGjAhR8nrOX4MUp0TQSNu4iXeWVjeycAfLXBaTDAqYFZYoe1ZrwWBtFudoTqG7K7JEZZUsSRFa2lwLzdzpAa8ni7j3T02B3TUNQT5sv"/>
+<span class="text-white font-medium text-sm">Destino destacado: Colombia</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-icons-outlined text-primary text-3xl">map</span>
+<h2 class="text-2xl font-bold">Consultar requisitos por destino</h2>
+</div>
+<div class="flex flex-col md:flex-row gap-4">
+<div class="relative flex-1">
+<select class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-4 pr-10 focus:ring-primary focus:border-primary appearance-none transition-all">
+<option>Seleccione un destino</option>
+<option>Bogotá, D.C.</option>
+<option>Cartagena de Indias</option>
+<option>Medellín</option>
+<option>Santa Marta</option>
+<option>San Andrés Islas</option>
+</select>
+<span class="material-icons-outlined absolute right-3 top-3 pointer-events-none text-slate-400">expand_more</span>
+</div>
+<button class="bg-primary hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-bold transition-all">
+                            Consultar
+                        </button>
+</div>
+<p class="mt-4 text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
+<span class="material-icons-outlined text-base">info</span>
+                        La información se administra internamente e incluye la fecha de última actualización.
+                    </p>
+</div>
+<div class="relative group rounded-3xl overflow-hidden h-[300px] shadow-lg">
+<img alt="Travel Experiences" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA07-B1Zcn5Y9lLVNWZFDTAAvvq2TSTkgbccBJogH13RJjEVvhdy5rXns7bS-QBmR4ZEF0Uncr4ND6MglrKx6e-SFNE6o9gwzVoTgq2MsFOU9EAmBWV3lmdWlzT66wkcLUUwWPfP8wu2p3-XHDMcl-e5HYmYzQWjs8NhS2Vk1JZhdkHiyPvvNApTxA-Al6nhUX1zeIlVotAFrTluYvWECjyaiLYKfumx1M5e-UHlJiz3BqOXM-UqjSSm5w3JP7RK36yuAPPtmxwzhRd"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<h3 class="text-white text-2xl font-bold mb-2">Experiencias de viajeros</h3>
+<p class="text-slate-200 mb-6 max-w-md">Solo se muestra contenido aprobado por moderación para garantizar calidad.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white px-6 py-2 rounded-full font-medium transition-all">
+                                Ver experiencias
+                            </button>
+<button class="bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-full font-medium transition-all">
+                                Iniciar sesión para publicar
+                            </button>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-2xl font-bold">Destinos Populares</h3>
+<button class="text-primary font-semibold flex items-center gap-1 hover:underline">
+                            Ver todos <span class="material-icons-outlined">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-2xl overflow-hidden mb-3">
+<img alt="Cartagena" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCHpPhqUPfpT-O_5g5llsRnWlDO8U2V8I4W02EykzSDQEEEidtTEZO8QCcJtvJYYMli4buHxqi9BNBQDdnQrJDBiw30bAeBR_9IokWN2FlUr9DmRjsNY-5tJjGQk-VBqxyLFwbnkbvTgsUIawC8xLiUUqAB997cd1Px9KvhSmlRwGWG_ACXHozqXU1nKpz1MI2IOtXH5LesZver2QE09uFg-TiIrzgw-k8gNpVP4FRxWfNXMbeHzcxUtJh9WdsRNXjlrpIfHMqixH3"/>
+</div>
+<h4 class="font-bold group-hover:text-primary transition-colors">Cartagena</h4>
+<p class="text-sm text-slate-500">Costa Caribe</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-2xl overflow-hidden mb-3">
+<img alt="Medellin" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLdSvRqbZjBwfoh4Qh9X7KElBNu_Q_tzxz-N0U_mrOdQB8NeAmY8Q1TZoKBhhlC717_ThXcMcQ1_VYANt0C89I2RIr5MlIWdh-LArbkEBhohRyPxKn0sUTjlN65RTPoWnEArxn9adl0-j04d6GNHynhJ6tOVMkPMxCYej-ttZlearD70gdOmH8CoBz-Z5PG1ytP0pI6_ZBpN0uFCYrrTR6z_dCIlp4AOLZZXIAe7g2tERGFLJIe53drGeIX9w20RGg0Tg41muYIeA9"/>
+</div>
+<h4 class="font-bold group-hover:text-primary transition-colors">Medellín</h4>
+<p class="text-sm text-slate-500">Antioquia</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-2xl overflow-hidden mb-3">
+<img alt="Guatape" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD08RwWSjhYs5Vrmz6UQ3Gh3Evfl-mT5IrIAXC-kRfi5qB80Y0gn03aFpbmyFCppEr5VObuy3L5TjafCgEY8Y9siuuGI9f-D9OMFObQvqh24GPoiBZQmeHw-xNWjqNiZpWUxFirptxEQT2SmnzVBcc20vyYuTKwEwmJvcfEfo7Npp5_1r3yuLHQskLRjgFEhY9wIMydWmAn_O3th6gzbtil6JeCK9FF83spDBubn_PdTwQw2Q6nTpTqKP-6NdZ82j2shol_egg4h4jX"/>
+</div>
+<h4 class="font-bold group-hover:text-primary transition-colors">Guatapé</h4>
+<p class="text-sm text-slate-500">Pueblo de Zócalos</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-2xl overflow-hidden mb-3">
+<img alt="Bogota" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqHFF8ZyNltr6eS1uAXCpo2150nk9FYzsBPeuCcLyC2Q9ecxvBXywG4N_VjgiZZBN6osvP_6lfzQwHCxuaiRyg3FbfgYG4SttgM0Z_wtHhPUkPHP5Idls3fkBh4jnHyWEYhbDe8D0Wgowf82GWrznYWU8526avL8B8CN9psSne7twjXfCzzd5OElwzV97nUEqGP5jdfpbT474g4plwSNe_39lrpwU9AyoEzduT1bFDavlbR2P3KU6VWuwsnWV5fB9MXoK1Nze2DlLl"/>
+</div>
+<h4 class="font-bold group-hover:text-primary transition-colors">Bogotá</h4>
+<p class="text-sm text-slate-500">Capital</p>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-amber-50 dark:bg-slate-800/50 p-6 rounded-3xl border border-amber-100 dark:border-amber-900/30">
+<div class="flex items-center gap-3 mb-4">
+<div class="bg-amber-200 dark:bg-amber-900/50 p-2 rounded-xl">
+<span class="material-icons-outlined text-amber-600 dark:text-amber-400">notifications_active</span>
+</div>
+<h3 class="font-bold text-slate-900 dark:text-white">Avisos de actualización</h3>
+</div>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="h-10 w-1 flex-shrink-0 bg-amber-400 rounded-full"></div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed italic">
+                                "No hay avisos recientes."
+                            </p>
+</div>
+<button class="w-full py-2 text-xs font-bold text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/20 transition-all">
+                            Ver historial de avisos
+                        </button>
+</div>
+</div>
+<div class="bg-blue-50/50 dark:bg-slate-800/30 p-6 rounded-3xl border border-blue-100 dark:border-slate-700">
+<h3 class="font-bold text-slate-900 dark:text-white mb-4">Vista previa</h3>
+<div class="bg-white dark:bg-slate-900 h-40 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400">
+<span class="material-icons-outlined text-4xl mb-2">image_search</span>
+<p class="text-sm">Selecciona un destino para ver el mapa</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
+<h3 class="font-bold text-slate-900 dark:text-white mb-4">Comunidad</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="text-center p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl">
+<div class="text-2xl font-bold text-primary">1.2k+</div>
+<div class="text-xs text-slate-500">Experiencias</div>
+</div>
+<div class="text-center p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl">
+<div class="text-2xl font-bold text-secondary">450</div>
+<div class="text-xs text-slate-500">Destinos</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 py-12">
+<div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="bg-gradient-to-tr from-yellow-400 via-blue-500 to-red-500 p-1.5 rounded-lg">
+<span class="material-icons-outlined text-white text-sm">beach_access</span>
+</div>
+<span class="text-lg font-bold text-slate-900 dark:text-white">
+                    go<span class="text-primary">Turism</span><span class="text-secondary">Col</span>
+</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm">
+                © 2024 goTurismCol. Todos los derechos reservados. Rediseño Moderno v3.
+            </p>
+<div class="flex gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-icons-outlined">facebook</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-icons-outlined">camera_alt</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-icons-outlined">language</span></a>
+</div>
+</div>
+</footer>
+
+</body></html>
