@@ -2,6 +2,16 @@
 $destinos = $pdo->query("SELECT id_destino, pais, ciudad FROM destino ORDER BY pais, ciudad")->fetchAll();
 $destino_id = isset($_GET['destino']) ? (int)$_GET['destino'] : 0;
 $errors = [];
+function requisito_tipo_label(string $tipo): string {
+  $key = strtolower(trim($tipo));
+  $map = [
+    'obligatorio' => 'Obligatorio',
+    'recomendado' => 'Recomendado',
+    'informacion' => 'Información gral.',
+    'información' => 'Información gral.',
+  ];
+  return $map[$key] ?? ucfirst($tipo);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   csrf_check();
@@ -88,7 +98,14 @@ if ($destino_id) {
           <input type="hidden" name="action" value="create">
           <input type="hidden" name="id_destino" value="<?= (int)$destino_id ?>">
           <div class="col-md-4"><input class="form-control" name="titulo" placeholder="Título" required></div>
-          <div class="col-md-3"><input class="form-control" name="tipo" placeholder="Tipo (migratorio/sanitario/documental)" required></div>
+          <div class="col-md-3">
+            <select class="form-select" name="tipo" required>
+              <option value="" disabled selected>Tipo</option>
+              <option value="obligatorio">Obligatorio</option>
+              <option value="recomendado">Recomendado</option>
+              <option value="informacion">Información gral.</option>
+            </select>
+          </div>
           <div class="col-md-2"><input class="form-control" type="date" name="fecha" value="<?= e(date('Y-m-d')) ?>" required></div>
           <div class="col-md-3"><input class="form-control" name="fuente" placeholder="Fuente oficial (opcional)"></div>
           <div class="col-12"><textarea class="form-control" name="descripcion" rows="3" placeholder="Descripción" required></textarea></div>
@@ -109,7 +126,7 @@ if ($destino_id) {
                 <strong><?= e($r['titulo_requisito']) ?></strong>
                 <span class="badge text-bg-<?= $r['estado']==='vigente'?'success':'secondary' ?>"><?= e($r['estado']) ?></span>
               </div>
-              <div class="text-secondary small">Tipo: <?= e($r['tipo_requisito']) ?> · Últ. actualización: <?= e($r['fecha_ultima_actualizacion']) ?></div>
+              <div class="text-secondary small">Tipo: <?= e(requisito_tipo_label($r['tipo_requisito'])) ?> · Últ. actualización: <?= e($r['fecha_ultima_actualizacion']) ?></div>
               <div class="mt-2"><?= nl2br(e($r['descripcion_requisito'])) ?></div>
               <?php if ($r['fuente_oficial']): ?>
                 <div class="text-secondary small mt-2"><strong>Fuente:</strong> <?= nl2br(e($r['fuente_oficial'])) ?></div>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Requisitos de Viaje | goTurismCol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3b82f6",
+              "background-light": "#f8fafc",
+              "background-dark": "#0f172a",
+              "card-light": "#ffffff",
+              "card-dark": "#1e293b",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .flag-sphere {
+            aspect-ratio: 1/1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 100%);
+            box-shadow: inset -4px -4px 12px rgba(0,0,0,0.2), 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .flag-sphere:hover {
+            transform: translateY(-8px) scale(1.1);
+        }
+        .flag-sphere.active {
+            border: 4px solid #3b82f6;
+            transform: translateY(-8px) scale(1.15);
+            box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 min-h-screen">
+<header class="sticky top-4 z-50 mx-auto max-w-7xl px-4">
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border border-white/20 dark:border-slate-700 shadow-lg rounded-2xl px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="bg-gradient-to-tr from-yellow-400 via-blue-500 to-red-500 p-2 rounded-lg">
+<span class="material-icons-outlined text-white">beach_access</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    go<span class="text-primary">Turism</span><span class="text-secondary">Col</span>
+</span>
+</div>
+<div class="hidden md:flex items-center space-x-8 font-medium">
+<a class="hover:text-primary transition-colors" href="#">Requisitos</a>
+<a class="hover:text-primary transition-colors" href="#">Experiencias</a>
+<a class="hover:text-primary transition-colors" href="#">Destinos</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors">Iniciar sesión</button>
+<button class="bg-secondary hover:bg-lime-600 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-md shadow-lime-500/20 transition-all hover:scale-105">
+                    Registrarse
+                </button>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined text-slate-500 dark:text-slate-400">dark_mode</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-8">
+<div class="mb-12 text-center">
+<h1 class="text-4xl font-extrabold tracking-tight mb-4">Requisitos por Destino</h1>
+<p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">Selecciona un país del carrusel para visualizar los requisitos de viaje, trámites migratorios y recomendaciones de salud actualizados.</p>
+</div>
+<div class="relative mb-16">
+<div class="flex items-center justify-center gap-6 md:gap-10 overflow-x-auto py-8 hide-scrollbar px-10">
+<button class="flex flex-col items-center group">
+<div class="flag-sphere active w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gradient-to-b from-yellow-400 via-blue-600 to-red-600 flex items-center justify-center">
+<img alt="Colombia flag" class="w-full h-full object-cover opacity-90 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVl0NXXU0cBWXOvhHq6fPbN0J9QZoEA32UX9aVHgUaqCTYYwHNnHv2JtkrPrBCudFPjs9-4Bj8HbLYDE-cYVJiHPtjmfNteKVQikge7AwHEYGvrjDpdJX-i-RNr3zS1DU3r2vTOALIFbkM454TrTJO85_Opdo2MNuJn6IpSkkSegyRkrvV9YtbU0SGgFUcEhmQtJ9fKiUop1rxZTgSoFSzpvGpX82No_Q0Fm0eQ3djYxOLMDSc546qRpdh96qo-uZiYF4MtMxXg1kU"/>
+</div>
+<span class="mt-4 font-bold text-primary">Colombia</span>
+</button>
+<button class="flex flex-col items-center group">
+<div class="flag-sphere w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-gradient-to-r from-blue-700 via-white to-red-600 flex items-center justify-center">
+<img alt="France flag" class="w-full h-full object-cover opacity-80 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQav4vUDbDml9wRy7CUnILrA_UnbByf4PB-PrdiJVvv-5nKEHM199lTW1Py03nK_bxQlaKl7eX0qSoujcz_oBKUJEpTXvsmlYNA8hpB-gfBvc5uNX1iFZWO1Hv17L7Z6f25TF30mdnH4Pw1jO2_W4xpG33g9XLfmH64gY7_Wi2FImH15ycHDO37odYRWjEWvzFCjrKxQuGi-1-_nvST43or5RhwaBBBT9_V-HUrSsDr7V1u_97idquWPXoxCg5Y3ACwvTv-GVOvrPm"/>
+</div>
+<span class="mt-4 font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Francia</span>
+</button>
+<button class="flex flex-col items-center group">
+<div class="flag-sphere w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-white flex items-center justify-center">
+<img alt="Japan flag" class="w-full h-full object-cover opacity-80 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoXUfenao0v7ar5WqRrd85c8hsGsLzUfrJbInTcHSArYmAmyH_keNoDTIMv3hbe2NeIeVR9BSF1-5le4YcIlGpJ11_YWRyMS_q7flcziCBWgk8wNmyIGyFojJo9jpaJQFAovnLv5xroGEPLFYK0bHe7BdZ5SLKEC9pkYVhI1OSAHSLIjPVv2HLOOEXt1fP99yRlwKDr4h7l7NPQWDGdb20QRt8DQ8VXffHiVeidtSLrDY7Wit-ocOl240B4bJRe2kkOaqnfp20BHhX"/>
+</div>
+<span class="mt-4 font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Japón</span>
+</button>
+<button class="flex flex-col items-center group">
+<div class="flag-sphere w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-green-600 flex items-center justify-center">
+<img alt="Brazil flag" class="w-full h-full object-cover opacity-80 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPVjU2K4ygX8dkzIwwR966fhBJT7DHO0Uj1wVNkt6sR3oQWq1ZP79cMbS4yGZG2ASAgSGu7t1yt1pEGGHy7fXL-g3oy1i6VJA7E9rDBQTYh_uGqlqXngsic6Fqj6TuOtQc4JSLfVyb2ykheFFGER26H-8Qf7a09CyD4qCAdo9AFaAFcT79Ue3ZV8r8pqI71mr2UG5lvAkIHdbK-HnrTgZmeNWFzNMLawg8cARdkZEJMqWi5ALaqxQyIUqcPPLtIDqu7X4QlFOFT0Hr"/>
+</div>
+<span class="mt-4 font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Brasil</span>
+</button>
+<button class="flex flex-col items-center group">
+<div class="flag-sphere w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-gradient-to-r from-green-600 via-white to-red-600 flex items-center justify-center">
+<img alt="Italy flag" class="w-full h-full object-cover opacity-80 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4lf1tReYFiu8BpQYjrcNpZR6nIBFqd66kCaouqVunjnQqxMvfKC3LhQGQBAv24kPSg055X5Nkcp9bvDUmj7YHX1Bd3Ur38gs5QVzrNhAW69EP2IU5bO5OsDLYDiKMO4D7n1E9KyITCn-V8uN-z1whFhfxfmsIaXL34ksqBAxc_YDR3HR7kE3clwtFO0M7FJ22d0AfT75ZBbvJhaBA3CsWoVqgOjDVm2e8uNuWZ2OzN8aLydvv-R9oVLXxZIPzB1WYwtDizLEDge-f"/>
+</div>
+<span class="mt-4 font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Italia</span>
+</button>
+<button class="flex flex-col items-center group">
+<div class="flag-sphere w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-red-600 flex items-center justify-center">
+<img alt="Spain flag" class="w-full h-full object-cover opacity-80 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC93VSmDyhQYDSNZevNJx9MKaRxK0DCZXqOb9VnxSYC5Yi-QVJKPm_hAzB9flNpqwTT67BCGSGTqVL2F3Fc_4qHrSXfBlDO2cp94COwgVpCY1dOg8FTNIxO7haJOp3i5vPMG0X20eo317Z9dE9HzEGxxc5XIxSAuIrpXMuZae5uB_RFB8Hb63UBD5M-Lt3yqmZonpd6RMAm_qh4x5W_f0IJ7JT27iKCME2h9QAAQWhRErdjgO7wkUdn1E6fnQL9N-9EnLZoezM_KM6p"/>
+</div>
+<span class="mt-4 font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">España</span>
+</button>
+<button class="flex flex-col items-center group">
+<div class="flag-sphere w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-blue-900 flex items-center justify-center">
+<img alt="USA flag" class="w-full h-full object-cover opacity-80 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtbORh76FarUt3MnAmso7NW8_X-eOw_nX1Z6kd_e47JGEOL9x9VHj233Nz2OsHMyLCVH2V83UMZT9o-dDjEPglGseGZq9VDYir6566v8pEhJjn0ix0-8p2V6SF5VFDgV9Q2jtmXe-i0A7iCMnR4WbClcTwhFVen411XRsZgj-b9O4kpm10dLFvn3rtI6GYjUsHstPRHaw4EooEuXXJdhLHaX1YqjfSu8OKwbeKfEObCl7F_Vi7wv-31QI8Ttmizro7XKYXCJg0XW2T"/>
+</div>
+<span class="mt-4 font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">EE.UU.</span>
+</button>
+</div>
+<div class="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-background-light dark:from-background-dark to-transparent pointer-events-none"></div>
+<div class="absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-background-light dark:from-background-dark to-transparent pointer-events-none"></div>
+</div>
+<div class="max-w-4xl mx-auto">
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden border border-slate-100 dark:border-slate-800">
+<div class="flex border-b border-slate-100 dark:border-slate-800">
+<button class="flex-1 py-5 text-sm font-bold border-b-2 border-primary text-primary transition-all flex items-center justify-center gap-2">
+<span class="material-icons-outlined text-lg">priority_high</span>
+                        Obligatorio
+                    </button>
+<button class="flex-1 py-5 text-sm font-medium text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-all flex items-center justify-center gap-2">
+<span class="material-icons-outlined text-lg">recommend</span>
+                        Recomendado
+                    </button>
+<button class="flex-1 py-5 text-sm font-medium text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-all flex items-center justify-center gap-2">
+<span class="material-icons-outlined text-lg">info</span>
+                        Información Gral.
+                    </button>
+</div>
+<div class="p-8 md:p-12">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-primary">
+<span class="material-icons-outlined text-2xl">assignment</span>
+</div>
+<div>
+<h2 class="text-2xl font-bold">Requisitos Obligatorios</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Estos documentos son indispensables para su entrada al país.</p>
+</div>
+</div>
+<div class="space-y-6">
+<div class="group flex items-start gap-5 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="mt-1 w-10 h-10 flex-shrink-0 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-xl flex items-center justify-center">
+<span class="material-icons-outlined">badge</span>
+</div>
+<div>
+<h3 class="font-bold text-lg mb-1">Pasaporte Vigente</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    El pasaporte debe tener una vigencia mínima de 6 meses desde el momento de entrada al territorio nacional. Se recomienda tener al menos dos páginas en blanco.
+                                </p>
+</div>
+</div>
+<div class="group flex items-start gap-5 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="mt-1 w-10 h-10 flex-shrink-0 bg-amber-50 dark:bg-amber-900/20 text-amber-500 rounded-xl flex items-center justify-center">
+<span class="material-icons-outlined">qr_code</span>
+</div>
+<div>
+<h3 class="font-bold text-lg mb-1">Check-Mig Colombia</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Formulario de pre-registro migratorio que debe completarse en línea entre 24 y 1 hora antes del vuelo. El código QR generado será solicitado al abordar.
+                                </p>
+</div>
+</div>
+<div class="group flex items-start gap-5 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="mt-1 w-10 h-10 flex-shrink-0 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 rounded-xl flex items-center justify-center">
+<span class="material-icons-outlined">vaccines</span>
+</div>
+<div>
+<h3 class="font-bold text-lg mb-1">Fiebre Amarilla</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Obligatorio si viaja desde zonas de riesgo o planea visitar parques naturales y zonas selváticas. Debe presentarse el carné internacional de vacunación.
+                                </p>
+</div>
+</div>
+</div>
+<div class="mt-12 flex justify-center">
+<button class="bg-primary hover:bg-blue-600 text-white font-bold px-10 py-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all flex items-center gap-2 active:scale-95">
+<span class="material-icons-outlined">download</span>
+                            Descargar Guía Completa (PDF)
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+<div class="max-w-7xl mx-auto px-6 py-12">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
+<span class="material-icons-outlined text-sm">travel_explore</span>
+</div>
+<span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+                        go<span class="text-primary">Turism</span>Col
+                    </span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm">
+                    © 2026 goTurismCol. Todos los derechos reservados.
+                </p>
+<div class="flex gap-6 text-sm font-medium text-slate-600 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Experiencias</a>
+<a class="hover:text-primary transition-colors" href="#">Requisitos</a>
+<a class="hover:text-primary transition-colors" href="#">Registro</a>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>

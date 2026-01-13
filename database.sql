@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS destino (
   pais VARCHAR(120) NOT NULL,
   ciudad VARCHAR(120) NULL,
   descripcion_general TEXT NULL,
+  bandera_path VARCHAR(255) NULL,
   estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo'
 ) ENGINE=InnoDB;
 
