@@ -794,3 +794,155 @@ select {
     border-bottom: 1px solid rgba(226, 232, 240, 0.9);
   }
 }
+
+.req-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 150px;
+}
+
+.req-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  font-weight: 600;
+  color: #1e40af;
+  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.req-action:hover {
+  transform: translateY(-1px);
+  background: #eaf2ff;
+  border-color: #b8ccff;
+  color: #1d4ed8;
+}
+
+.req-action--primary {
+  background: #eef4ff;
+  border-color: #c7dbff;
+  color: #1d4ed8;
+}
+
+.req-action--primary:hover {
+  background: #e0ecff;
+  border-color: #b3ceff;
+  color: #1e40af;
+}
+
+.req-action--muted {
+  background: #f8fafc;
+  border-color: #d7e0ec;
+  color: #475569;
+}
+
+.req-action--muted:hover {
+  background: #eef2f7;
+  border-color: #c9d4e6;
+  color: #334155;
+}
+
+.req-action--danger {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #e11d48;
+}
+
+.req-action--danger:hover {
+  background: #ffe4e6;
+  border-color: #fda4af;
+  color: #be123c;
+}
+
+.req-desc {
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+.req-updates {
+  max-height: 140px;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+}
+
+.req-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 1rem;
+  align-items: start;
+}
+
+.req-main {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .req-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .req-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .req-action {
+    width: auto;
+  }
+}
+
+.req-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+  z-index: 2000;
+}
+
+.req-modal {
+  width: min(980px, 100%);
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.35);
+  padding: 1.5rem 1.75rem 1.75rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.req-modal textarea.form-control {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.req-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.req-modal-close {
+  font-weight: 600;
+  color: #64748b;
+}
+
+.req-modal-close:hover {
+  color: #0f172a;
+}
+
+@media (max-width: 720px) {
+  .req-modal {
+    padding: 1.25rem;
+  }
+}

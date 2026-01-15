@@ -1,6 +1,7 @@
 <?php require_once __DIR__ . '/_admin_guard.php';
 $errors = [];
 $edit_id = isset($_GET['edit']) ? (int)$_GET['edit'] : 0;
+$new_modal = isset($_GET['new']) ? 1 : 0;
 
 function validate_flag_upload(?array $file, array &$errors): ?string {
   if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flag_ext = validate_flag_upload($_FILES['bandera'] ?? null, $errors);
     if (!$pais) $errors[] = "El país es obligatorio.";
     if (!$errors) {
-      $pdo->prepare("INSERT INTO destino (pais, ciudad, descripcion_general) VALUES (?,?,?)")
+      $stmt = $pdo->prepare("INSERT INTO destino (pais, ciudad, descripcion_general) VALUES (?,?,?)")
           ->execute([$pais, $ciudad ?: null, $desc ?: null]);
       $nuevo_id = (int)$pdo->lastInsertId();
       if ($flag_ext) {
@@ -53,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
       if (!$errors) {
-        redirect('admin/destinos.php');
+        redirect('admin/destinos.php?created=1');
       }
     }
   } elseif ($action === 'update') {
@@ -76,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
       if (!$errors) {
-        redirect('admin/destinos.php?edit=' . $id);
+        redirect('admin/destinos.php?updated=1');
       }
     }
   } elseif ($action === 'toggle') {
@@ -123,41 +124,77 @@ if ($edit_id) {
 <main class="container py-4">
   <h1 class="h4 mb-3">Destinos</h1>
   <?php if ($errors): ?><div class="alert alert-danger"><ul class="mb-0"><?php foreach ($errors as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
+  <?php if (!empty($_GET['created'])): ?>
+    <div class="alert alert-success">Destino creado correctamente.</div>
+  <?php endif; ?>
+  <?php if (!empty($_GET['updated'])): ?>
+    <div class="alert alert-success">Destino actualizado correctamente.</div>
+  <?php endif; ?>
 
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <h2 class="h6">Crear destino</h2>
-      <form method="post" class="row g-2" enctype="multipart/form-data">
-        <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-        <input type="hidden" name="action" value="create">
-        <div class="col-md-4"><input class="form-control" name="pais" placeholder="País" required></div>
-        <div class="col-md-4"><input class="form-control" name="ciudad" placeholder="Ciudad (opcional)"></div>
-        <div class="col-md-4"><input class="form-control" name="descripcion" placeholder="Descripción (opcional)"></div>
-        <div class="col-md-6">
-          <input class="form-control" type="file" name="bandera" accept=".png,.jpg,.jpeg,.webp">
-          <div class="form-text">Bandera en JPG/PNG/WebP. Se almacena en assets/flags/.</div>
-        </div>
-        <div class="col-12 d-grid"><button class="btn btn-primary">Guardar</button></div>
-      </form>
-    </div>
+  <div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-primary" href="<?= e(base_url('admin/destinos.php?new=1')) ?>">Nuevo destino</a>
   </div>
 
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <h2 class="h6">Editar destino</h2>
-      <?php if (!$edit_item): ?>
-        <p class="text-secondary mb-0">Seleccione un destino desde el listado para editarlo.</p>
-      <?php else: ?>
-        <form method="post" class="row g-2" enctype="multipart/form-data">
+  <?php if ($edit_id && !$edit_item): ?>
+    <div class="alert alert-warning">No se encontro el destino seleccionado para editar.</div>
+  <?php endif; ?>
+
+  <?php if ($new_modal): ?>
+    <div class="req-modal-backdrop">
+      <div class="req-modal">
+        <div class="req-modal-head">
+          <h2 class="h6 mb-0">Crear destino</h2>
+          <a class="req-modal-close" href="<?= e(base_url('admin/destinos.php')) ?>">Cancelar</a>
+        </div>
+        <form method="post" class="row g-2 mt-3" enctype="multipart/form-data">
+          <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+          <input type="hidden" name="action" value="create">
+          <div class="col-md-4"><input class="form-control form-control-sm" name="pais" placeholder="Pais" required></div>
+          <div class="col-md-4"><input class="form-control form-control-sm" name="ciudad" placeholder="Ciudad (opcional)"></div>
+          <div class="col-md-4"><input class="form-control form-control-sm" name="descripcion" placeholder="Descripcion (opcional)"></div>
+          <div class="col-md-6">
+            <input class="form-control form-control-sm flag-input" type="file" name="bandera" accept=".png,.jpg,.jpeg,.webp">
+            <div class="form-text">Bandera en JPG/PNG/WebP. Recomendado: 640x480 px.</div>
+          </div>
+          <div class="col-md-6">
+            <div class="border rounded p-2 bg-light">
+              <div class="small text-secondary mb-1">Vista previa</div>
+              <img class="img-fluid rounded flag-preview" alt="Vista previa de bandera" style="display:none; max-height:120px;">
+            </div>
+          </div>
+          <div class="col-12"><button class="btn btn-primary w-100">Guardar</button></div>
+        </form>
+      </div>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($edit_item): ?>
+    <div class="req-modal-backdrop">
+      <div class="req-modal">
+        <div class="req-modal-head">
+          <h2 class="h6 mb-0">Editar destino</h2>
+          <a class="req-modal-close" href="<?= e(base_url('admin/destinos.php')) ?>">Cancelar</a>
+        </div>
+        <form method="post" class="row g-2 mt-3" enctype="multipart/form-data">
           <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
           <input type="hidden" name="action" value="update">
           <input type="hidden" name="id_destino" value="<?= (int)$edit_item['id_destino'] ?>">
-          <div class="col-md-4"><input class="form-control" name="pais" value="<?= e($edit_item['pais']) ?>" required></div>
-          <div class="col-md-4"><input class="form-control" name="ciudad" value="<?= e($edit_item['ciudad'] ?? '') ?>" placeholder="Ciudad (opcional)"></div>
-          <div class="col-md-4"><input class="form-control" name="descripcion" value="<?= e($edit_item['descripcion_general'] ?? '') ?>" placeholder="Descripción (opcional)"></div>
+          <div class="col-md-4"><input class="form-control form-control-sm" name="pais" value="<?= e($edit_item['pais']) ?>" required></div>
+          <div class="col-md-4"><input class="form-control form-control-sm" name="ciudad" value="<?= e($edit_item['ciudad'] ?? '') ?>" placeholder="Ciudad (opcional)"></div>
+          <div class="col-md-4"><input class="form-control form-control-sm" name="descripcion" value="<?= e($edit_item['descripcion_general'] ?? '') ?>" placeholder="Descripcion (opcional)"></div>
           <div class="col-md-6">
-            <input class="form-control" type="file" name="bandera" accept=".png,.jpg,.jpeg,.webp">
-            <div class="form-text">Suba una nueva bandera para reemplazar la actual.</div>
+            <input class="form-control form-control-sm flag-input" type="file" name="bandera" accept=".png,.jpg,.jpeg,.webp" data-current="<?= e($edit_item['bandera_path'] ?? '') ?>">
+            <div class="form-text">Suba una nueva bandera para reemplazar la actual. Recomendado: 640x480 px.</div>
+          </div>
+          <div class="col-md-6">
+            <div class="border rounded p-2 bg-light">
+              <div class="small text-secondary mb-1">Vista previa</div>
+              <?php if (!empty($edit_item['bandera_path'])): ?>
+                <img class="img-fluid rounded flag-preview" src="<?= e(base_url($edit_item['bandera_path'])) ?>" alt="Bandera actual" style="max-height:120px;">
+              <?php else: ?>
+                <img class="img-fluid rounded flag-preview" alt="Vista previa de bandera" style="display:none; max-height:120px;">
+              <?php endif; ?>
+            </div>
           </div>
           <div class="col-md-6 d-flex align-items-end gap-2">
             <div class="form-check">
@@ -165,11 +202,11 @@ if ($edit_id) {
               <label class="form-check-label" for="clear_flag">Quitar bandera actual</label>
             </div>
           </div>
-          <div class="col-12 d-grid"><button class="btn btn-primary">Actualizar</button></div>
+          <div class="col-12"><button class="btn btn-primary w-100">Actualizar</button></div>
         </form>
-      <?php endif; ?>
+      </div>
     </div>
-  </div>
+  <?php endif; ?>
 
   <div class="card shadow-sm">
     <div class="card-body">
@@ -214,5 +251,28 @@ if ($edit_id) {
   </div>
 </main>
 <?php include __DIR__ . '/../../app/views/partials/footer.php'; ?>
+
+<script>
+  document.querySelectorAll('.flag-input').forEach((input) => {
+    const wrapper = input.closest('form');
+    const preview = wrapper ? wrapper.querySelector('.flag-preview') : null;
+    if (!preview) return;
+
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      if (!file) {
+        preview.style.display = 'none';
+        preview.removeAttribute('src');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        preview.src = event.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+</script>
 </body>
 </html>
