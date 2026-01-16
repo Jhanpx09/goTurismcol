@@ -19,6 +19,11 @@
       </a>
     </div>
     <div class="col-md-6">
+      <a class="card shadow-sm text-decoration-none" href="<?= e(base_url('admin/destinos_destacados.php')) ?>">
+        <div class="card-body"><h2 class="h6 mb-1">Destinos destacados</h2><p class="text-secondary mb-0">Gestionar la seccion de publicidad en la portada.</p></div>
+      </a>
+    </div>
+    <div class="col-md-6">
       <a class="card shadow-sm text-decoration-none" href="<?= e(base_url('admin/requisitos.php')) ?>">
         <div class="card-body"><h2 class="h6 mb-1">Requisitos</h2><p class="text-secondary mb-0">Gestionar requisitos y registrar actualizaciones.</p></div>
       </a>

@@ -14,7 +14,19 @@ $avisos = $pdo->query("
   ORDER BY a.fecha_publicacion DESC
   LIMIT 5
 ")->fetchAll();
-$destinos_populares = array_slice($destinos, 0, 4);
+$stats = $pdo->query("
+  SELECT
+    (SELECT COUNT(*) FROM experiencia_viajero WHERE estado_moderacion='aprobada') AS total_experiencias,
+    (SELECT COUNT(*) FROM destino WHERE estado='activo') AS total_destinos
+")->fetch();
+$destinos_destacados = $pdo->query("
+  SELECT dd.id_destacado, dd.titulo, dd.descripcion, dd.imagen_path, dd.id_destino, d.pais, d.ciudad
+  FROM destino_destacado dd
+  JOIN destino d ON d.id_destino = dd.id_destino
+  WHERE dd.estado='activo' AND d.estado='activo'
+  ORDER BY dd.orden ASC, dd.id_destacado DESC
+  LIMIT 4
+")->fetchAll();
 ?>
 <!doctype html>
 <html lang="es">
@@ -80,18 +92,27 @@ $destinos_populares = array_slice($destinos, 0, 4);
 
       <section class="destinations" id="destinos">
         <div class="destinations-head">
-          <h2>Destinos populares</h2>
+          <h2>Destinos destacados</h2>
           <a class="link-primary" href="<?= e(base_url('requisitos.php')) ?>">Ver todos</a>
         </div>
-        <?php if (!$destinos_populares): ?>
-          <p class="helper-text">Aún no hay destinos destacados.</p>
+        <?php if (!$destinos_destacados): ?>
+          <p class="helper-text">Aun no hay destinos destacados.</p>
         <?php else: ?>
           <div class="destinations-grid">
-            <?php foreach ($destinos_populares as $d): ?>
+            <?php foreach ($destinos_destacados as $d): ?>
               <article class="destination-card">
-                <img class="destination-image" src="<?= e(base_url('assets/img/main.webp')) ?>" alt="<?= e($d['pais']) ?>">
-                <h3><?= e($d['ciudad'] ?: $d['pais']) ?></h3>
-                <span><?= e($d['pais']) ?></span>
+                <img class="destination-image" src="<?= e(base_url($d['imagen_path'])) ?>" alt="<?= e($d['titulo']) ?>">
+                <div class="destination-body">
+                  <div class="destination-meta">
+                    <span><?= e($d['pais']) ?></span>
+                    <?php if (!empty($d['ciudad'])): ?>
+                      <span><?= e($d['ciudad']) ?></span>
+                    <?php endif; ?>
+                  </div>
+                  <h3><?= e($d['titulo']) ?></h3>
+                  <p><?= nl2br(e($d['descripcion'])) ?></p>
+                  <a class="link-primary" href="<?= e(base_url('requisitos.php?destino=' . (int)$d['id_destino'])) ?>">Ver requisitos</a>
+                </div>
               </article>
             <?php endforeach; ?>
           </div>
@@ -138,11 +159,11 @@ $destinos_populares = array_slice($destinos, 0, 4);
         <h2>Comunidad</h2>
         <div class="community-grid">
           <div>
-            <strong>1.2k+</strong>
+            <strong><?= (int)($stats['total_experiencias'] ?? 0) ?></strong>
             <span>Experiencias</span>
           </div>
           <div>
-            <strong>450</strong>
+            <strong><?= (int)($stats['total_destinos'] ?? 0) ?></strong>
             <span>Destinos</span>
           </div>
         </div>

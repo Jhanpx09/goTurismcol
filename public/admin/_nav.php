@@ -11,6 +11,7 @@
     <div class="collapse navbar-collapse" id="navAdmin">
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/destinos.php')) ?>">Destinos</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/destinos_destacados.php')) ?>">Destinos destacados</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/requisitos.php')) ?>">Requisitos</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/experiencias.php')) ?>">Experiencias</a></li>
         <li class="nav-item"><a class="nav-link" href="<?= e(base_url('admin/avisos.php')) ?>">Avisos</a></li>

@@ -366,6 +366,10 @@ select {
   padding: 1rem;
   border: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: 0 12px 22px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .destination-image {
@@ -374,6 +378,7 @@ select {
   border-radius: 16px;
   object-fit: cover;
   margin-bottom: 0.75rem;
+  transition: transform 0.25s ease;
 }
 
 .destination-card h3 {
@@ -384,6 +389,38 @@ select {
 .destination-card span {
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+.destination-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 30px rgba(15, 23, 42, 0.15);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.destination-card:hover .destination-image {
+  transform: scale(1.03);
+}
+
+.destination-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.destination-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.destination-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .notice-card {
@@ -621,6 +658,20 @@ select {
   height: 100%;
   object-fit: cover;
   opacity: 0.9;
+}
+
+.flag-sphere--sm {
+  width: 46px;
+  height: 46px;
+}
+
+.experience-flag {
+  display: inline-flex;
+}
+
+.experience-flag:hover .flag-sphere {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 14px 22px rgba(59, 130, 246, 0.25);
 }
 
 .flag-fallback {
