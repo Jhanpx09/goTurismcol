@@ -5,7 +5,7 @@ require_once __DIR__ . '/../app/core/auth.php';
 start_session();
 
 $pdo = db();
-$destinos = $pdo->query("SELECT id_destino, pais, ciudad FROM destino WHERE estado='activo' ORDER BY pais, ciudad")->fetchAll();
+$destinos = $pdo->query("SELECT id_destino, pais, ciudad, bandera_path FROM destino WHERE estado='activo' ORDER BY pais, ciudad")->fetchAll();
 $avisos = $pdo->query("
   SELECT a.titulo_aviso, a.detalle_aviso, a.fecha_publicacion, d.pais, d.ciudad
   FROM aviso_actualizacion a
@@ -53,14 +53,14 @@ $destinos_destacados = $pdo->query("
 
   <div class="content-grid">
     <div class="col-main">
-      <section class="card requirements-card">
+      <section class="card requirements-card requirements-card--home">
         <div class="card-title">
           <span class="card-icon">🧭</span>
           <h2>Consultar requisitos por destino</h2>
         </div>
         <form class="requirements-form" method="get" action="<?= e(base_url('requisitos.php')) ?>">
           <div class="select-wrap">
-            <select name="destino" required>
+            <select class="select-native" name="destino" id="destino-select" required>
               <option value="" selected disabled>Seleccione un destino</option>
               <?php foreach ($destinos as $d): ?>
                 <option value="<?= (int)$d['id_destino'] ?>">
@@ -68,6 +68,35 @@ $destinos_destacados = $pdo->query("
                 </option>
               <?php endforeach; ?>
             </select>
+            <div class="custom-select" data-select="destino-select">
+              <button class="custom-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                <span class="custom-select__value">Seleccione un destino</span>
+                <span class="custom-select__caret">▾</span>
+              </button>
+              <div class="custom-select__menu" role="listbox">
+                <div class="custom-select__search">
+                  <input type="text" placeholder="Buscar destino" aria-label="Buscar destino">
+                </div>
+                <?php foreach ($destinos as $d): ?>
+                  <button
+                    class="custom-select__option"
+                    type="button"
+                    data-value="<?= (int)$d['id_destino'] ?>"
+                    data-label="<?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?>"
+                    role="option"
+                  >
+                    <span class="flag-sphere flag-sphere--xs">
+                      <?php if (!empty($d['bandera_path'])): ?>
+                        <img src="<?= e(base_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
+                      <?php else: ?>
+                        <span class="flag-fallback"><?= e(substr($d['pais'], 0, 1)) ?></span>
+                      <?php endif; ?>
+                    </span>
+                    <span class="custom-select__label"><?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?></span>
+                  </button>
+                <?php endforeach; ?>
+              </div>
+            </div>
           </div>
           <button class="btn btn-primary" type="submit">Consultar</button>
         </form>
@@ -147,14 +176,6 @@ $destinos_destacados = $pdo->query("
         <a class="btn btn-outline btn-block" href="<?= e(base_url('avisos.php')) ?>">Ver historial de avisos</a>
       </section>
 
-      <section class="card preview-card">
-        <h2>Vista previa</h2>
-        <div class="preview-box">
-          <img src="<?= e(base_url('assets/img/main.webp')) ?>" alt="Vista previa">
-          <p>Selecciona un destino para ver el mapa</p>
-        </div>
-      </section>
-
       <section class="card community-card">
         <h2>Comunidad</h2>
         <div class="community-grid">
@@ -173,5 +194,98 @@ $destinos_destacados = $pdo->query("
 </main>
 
 <?php include __DIR__ . '/../app/views/partials/footer.php'; ?>
+<script>
+  document.documentElement.classList.add('js');
+  document.querySelectorAll('.custom-select').forEach(function (wrapper) {
+    var selectId = wrapper.getAttribute('data-select');
+    var select = document.getElementById(selectId);
+    if (!select) return;
+
+    var trigger = wrapper.querySelector('.custom-select__trigger');
+    var valueEl = wrapper.querySelector('.custom-select__value');
+    var options = wrapper.querySelectorAll('.custom-select__option');
+    var searchInput = wrapper.querySelector('.custom-select__search input');
+
+    function clearSearch() {
+      if (!searchInput) return;
+      searchInput.value = '';
+      filterOptions('');
+    }
+
+    function filterOptions(query) {
+      var term = (query || '').toLowerCase().trim();
+      options.forEach(function (option) {
+        var label = option.getAttribute('data-label') || option.textContent || '';
+        var match = !term || label.toLowerCase().indexOf(term) !== -1;
+        option.classList.toggle('is-hidden', !match);
+      });
+    }
+
+    function closeMenu() {
+      wrapper.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      clearSearch();
+    }
+
+    function openMenu() {
+      wrapper.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      if (searchInput) {
+        searchInput.focus();
+        searchInput.select();
+      }
+    }
+
+    function syncSelected() {
+      var selected = select.value;
+      options.forEach(function (opt) { opt.classList.remove('is-selected'); });
+      options.forEach(function (option) {
+        if (option.getAttribute('data-value') === selected) {
+          option.classList.add('is-selected');
+          var label = option.querySelector('.custom-select__label');
+          valueEl.textContent = label ? label.textContent : option.textContent;
+        }
+      });
+    }
+
+    trigger.addEventListener('click', function () {
+      if (wrapper.classList.contains('is-open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    options.forEach(function (option) {
+      option.addEventListener('click', function () {
+        var value = option.getAttribute('data-value');
+        var label = option.querySelector('.custom-select__label');
+        select.value = value;
+        valueEl.textContent = label ? label.textContent : option.textContent;
+        options.forEach(function (opt) { opt.classList.remove('is-selected'); });
+        option.classList.add('is-selected');
+        select.dispatchEvent(new Event('change'));
+        closeMenu();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        filterOptions(searchInput.value);
+      });
+      searchInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+      });
+    }
+
+    document.addEventListener('click', function (event) {
+      if (!wrapper.contains(event.target)) closeMenu();
+    });
+
+    syncSelected();
+  });
+</script>
 </body>
 </html>
