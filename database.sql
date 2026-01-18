@@ -28,7 +28,19 @@ CREATE TABLE IF NOT EXISTS destino (
   pais VARCHAR(120) NOT NULL,
   ciudad VARCHAR(120) NULL,
   descripcion_general TEXT NULL,
+  bandera_path VARCHAR(255) NULL,
   estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo'
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS destino_destacado (
+  id_destacado INT AUTO_INCREMENT PRIMARY KEY,
+  id_destino INT NOT NULL,
+  titulo VARCHAR(180) NOT NULL,
+  descripcion TEXT NOT NULL,
+  imagen_path VARCHAR(255) NOT NULL,
+  orden INT NOT NULL DEFAULT 0,
+  estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+  CONSTRAINT fk_dest_destacado FOREIGN KEY (id_destino) REFERENCES destino(id_destino) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS requisito_viaje (

@@ -30,19 +30,16 @@ $avisos = $pdo->query("
   JOIN destino d ON d.id_destino = a.id_destino
   ORDER BY a.estado DESC, a.fecha_publicacion DESC
 ")->fetchAll();
+$page_title = 'Avisos';
+$page_subtitle = 'Publica comunicados importantes por destino.';
 ?>
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Avisos | Panel admin</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
-</head>
-<body>
-<?php include __DIR__ . '/_nav.php'; ?>
-<main class="container py-4">
-  <h1 class="h4 mb-3">Avisos de actualización</h1>
+<?php include __DIR__ . '/_layout_start.php'; ?>
+  <div class="admin-section-head">
+    <h2>Avisos de actualizacion</h2>
+    <p>Publica comunicados importantes asociados a un destino.</p>
+  </div>
+
+  <div class="admin-page">
   <?php if ($errors): ?><div class="alert alert-danger"><ul class="mb-0"><?php foreach ($errors as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
 
   <div class="card shadow-sm mb-4">
@@ -71,7 +68,7 @@ $avisos = $pdo->query("
       <h2 class="h6">Listado</h2>
       <div class="table-responsive">
         <table class="table table-sm align-middle">
-          <thead><tr><th>ID</th><th>Destino</th><th>Título</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+          <thead><tr><th>ID</th><th>Destino</th><th>Titulo</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
           <tbody>
           <?php foreach ($avisos as $a): ?>
             <tr>
@@ -95,7 +92,5 @@ $avisos = $pdo->query("
       </div>
     </div>
   </div>
-</main>
-<?php include __DIR__ . '/../../app/views/partials/footer.php'; ?>
-</body>
-</html>
+  </div>
+<?php include __DIR__ . '/_layout_end.php'; ?>

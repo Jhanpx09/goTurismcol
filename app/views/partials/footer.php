@@ -1,7 +1,7 @@
 ﻿<footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <img class="brand-logo" src="<?= e(base_url('assets/img/logo.webp')) ?>" alt="goTurismCol">
+      <img class="brand-logo" src="<?= e(asset_url('assets/img/logo.webp')) ?>" alt="goTurismCol">
       <span class="brand-name">go<span class="brand-accent">Turism</span><span class="brand-accent-secondary">Col</span></span>
     </div>
     <p>© <?= date('Y') ?> <?= e(config('app.app_name')) ?>. Todos los derechos reservados.</p>

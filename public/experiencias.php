@@ -8,7 +8,7 @@ $destinos = $pdo->query("SELECT id_destino, pais, ciudad FROM destino WHERE esta
 $filtro = isset($_GET['destino']) ? (int)$_GET['destino'] : 0;
 
 $sql = "
-  SELECT e.titulo, e.contenido, e.fecha_publicacion, d.pais, d.ciudad, u.correo
+  SELECT e.titulo, e.contenido, e.fecha_publicacion, d.pais, d.ciudad, d.bandera_path, u.correo
   FROM experiencia_viajero e
   JOIN destino d ON d.id_destino = e.id_destino
   JOIN usuario u ON u.id_usuario = e.id_usuario
@@ -29,7 +29,7 @@ $items = $stmt->fetchAll();
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Experiencias | <?= e(config('app.app_name')) ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
+  <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body>
 <?php include __DIR__ . '/../app/views/partials/nav.php'; ?>
@@ -67,7 +67,18 @@ $items = $stmt->fetchAll();
             <div class="card-body">
               <div class="d-flex justify-content-between flex-wrap gap-2">
                 <h2 class="h6 mb-0"><?= e($it['titulo']) ?></h2>
-                <span class="text-secondary small"><?= e($it['pais'] . ($it['ciudad'] ? ' - ' . $it['ciudad'] : '')) ?></span>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="text-secondary small"><?= e($it['pais'] . ($it['ciudad'] ? ' - ' . $it['ciudad'] : '')) ?></span>
+                  <span class="experience-flag">
+                    <span class="flag-sphere flag-sphere--sm">
+                      <?php if (!empty($it['bandera_path'])): ?>
+                        <img src="<?= e(asset_url($it['bandera_path'])) ?>" alt="Bandera de <?= e($it['pais']) ?>">
+                      <?php else: ?>
+                        <span class="flag-fallback"><?= e(substr($it['pais'], 0, 1)) ?></span>
+                      <?php endif; ?>
+                    </span>
+                  </span>
+                </div>
               </div>
               <div class="text-secondary small mt-1">
                 Publicado: <?= e(date('Y-m-d', strtotime($it['fecha_publicacion']))) ?> · Autor: <?= e($it['correo']) ?>
