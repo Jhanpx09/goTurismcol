@@ -143,19 +143,16 @@ if ($edit_id) {
   $stmt->execute([$edit_id]);
   $edit_item = $stmt->fetch();
 }
+$page_title = 'Destinos destacados';
+$page_subtitle = 'Gestiona la seccion de publicidad en la portada.';
 ?>
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Destinos destacados | Panel admin</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
-</head>
-<body>
-<?php include __DIR__ . '/_nav.php'; ?>
-<main class="container py-4">
-  <h1 class="h4 mb-3">Destinos destacados</h1>
+<?php include __DIR__ . '/_layout_start.php'; ?>
+  <div class="admin-section-head">
+    <h2>Destinos destacados</h2>
+    <p>Administra el contenido promocional que se muestra en la portada.</p>
+  </div>
+
+  <div class="admin-page">
   <?php if ($errors): ?><div class="alert alert-danger"><ul class="mb-0"><?php foreach ($errors as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
   <?php if (!empty($_GET['created'])): ?>
     <div class="alert alert-success">Destino destacado creado correctamente.</div>
@@ -319,10 +316,9 @@ if ($edit_id) {
       </div>
     </div>
   </div>
-</main>
-<?php include __DIR__ . '/../../app/views/partials/footer.php'; ?>
+  </div>
 
-<script>
+  <script>
   document.querySelectorAll('.featured-input').forEach((input) => {
     const wrapper = input.closest('form');
     const preview = wrapper ? wrapper.querySelector('.featured-preview') : null;
@@ -344,5 +340,4 @@ if ($edit_id) {
     });
   });
 </script>
-</body>
-</html>
+<?php include __DIR__ . '/_layout_end.php'; ?>

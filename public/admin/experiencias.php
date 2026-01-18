@@ -29,19 +29,16 @@ $pendientes = $pdo->query("
   WHERE e.estado_moderacion='pendiente'
   ORDER BY e.fecha_envio ASC
 ")->fetchAll();
+$page_title = 'Moderacion';
+$page_subtitle = 'Revisa y aprueba las experiencias pendientes.';
 ?>
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Moderación | Panel admin</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
-</head>
-<body>
-<?php include __DIR__ . '/_nav.php'; ?>
-<main class="container py-4">
-  <h1 class="h4 mb-3">Moderación de experiencias</h1>
+<?php include __DIR__ . '/_layout_start.php'; ?>
+  <div class="admin-section-head">
+    <h2>Moderacion de experiencias</h2>
+    <p>Aprueba o rechaza las experiencias enviadas por los viajeros.</p>
+  </div>
+
+  <div class="admin-page">
   <?php if ($errors): ?><div class="alert alert-danger"><ul class="mb-0"><?php foreach ($errors as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
 
   <?php if (!$pendientes): ?>
@@ -75,7 +72,5 @@ $pendientes = $pdo->query("
       </div>
     <?php endforeach; ?>
   <?php endif; ?>
-</main>
-<?php include __DIR__ . '/../../app/views/partials/footer.php'; ?>
-</body>
-</html>
+  </div>
+<?php include __DIR__ . '/_layout_end.php'; ?>
