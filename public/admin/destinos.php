@@ -34,6 +34,7 @@ function save_flag_upload(array $file, int $destino_id, string $ext, array &$err
   }
   return 'assets/flags/' . $filename;
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   csrf_check();
   $action = $_POST['action'] ?? '';
@@ -187,7 +188,7 @@ $page_subtitle = 'Gestiona los destinos disponibles en la plataforma.';
             <div class="border rounded p-2 bg-light">
               <div class="small text-secondary mb-1">Vista previa</div>
               <?php if (!empty($edit_item['bandera_path'])): ?>
-                <img class="img-fluid rounded flag-preview" src="<?= e(base_url($edit_item['bandera_path'])) ?>" alt="Bandera actual" style="max-height:120px;">
+                <img class="img-fluid rounded flag-preview" src="<?= e(asset_url($edit_item['bandera_path'])) ?>" alt="Bandera actual" style="max-height:120px;">
               <?php else: ?>
                 <img class="img-fluid rounded flag-preview" alt="Vista previa de bandera" style="display:none; max-height:120px;">
               <?php endif; ?>
@@ -217,7 +218,7 @@ $page_subtitle = 'Gestiona los destinos disponibles en la plataforma.';
               <td><?= (int)$it['id_destino'] ?></td>
               <td>
                 <?php if (!empty($it['bandera_path'])): ?>
-                  <img src="<?= e(base_url($it['bandera_path'])) ?>" alt="Bandera" width="48" height="48" class="rounded">
+                  <img src="<?= e(asset_url($it['bandera_path'])) ?>" alt="Bandera" width="48" height="48" class="rounded">
                 <?php else: ?>
                   <span class="text-secondary small">Sin imagen</span>
                 <?php endif; ?>

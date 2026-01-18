@@ -89,7 +89,7 @@ foreach ($requisitos as $r) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Requisitos | <?= e(config('app.app_name')) ?></title>
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
+  <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body>
 <?php include __DIR__ . '/../app/views/partials/nav.php'; ?>
@@ -110,7 +110,7 @@ foreach ($requisitos as $r) {
           <a class="flag-item <?= $is_active ? 'is-active' : '' ?>" href="<?= e(base_url('requisitos.php?destino=' . (int)$d['id_destino'])) ?>">
             <span class="flag-sphere">
               <?php if (!empty($d['bandera_path'])): ?>
-                <img src="<?= e(base_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
+                <img src="<?= e(asset_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
               <?php else: ?>
                 <span class="flag-fallback"><?= e(substr($d['pais'], 0, 1)) ?></span>
               <?php endif; ?>

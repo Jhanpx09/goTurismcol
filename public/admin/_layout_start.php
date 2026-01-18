@@ -20,14 +20,14 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
   <title><?= e($page_title) ?> | <?= e(config('app.app_name')) ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
+  <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body class="admin-body">
 <div class="admin-shell">
   <aside class="admin-sidebar">
     <div class="admin-sidebar-header">
       <div class="admin-brand">
-        <img class="admin-logo" src="<?= e(base_url('assets/img/logo.webp')) ?>" alt="<?= e(config('app.app_name')) ?>">
+        <img class="admin-logo" src="<?= e(asset_url('assets/img/logo.webp')) ?>" alt="<?= e(config('app.app_name')) ?>">
         <span>Panel admin</span>
       </div>
     </div>

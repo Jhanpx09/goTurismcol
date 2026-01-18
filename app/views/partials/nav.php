@@ -10,7 +10,7 @@ function nav_active(string $file, string $current): string {
 <header class="site-header">
   <nav class="site-nav">
     <a class="brand" href="<?= e(base_url('index.php')) ?>">
-      <img class="brand-logo" src="<?= e(base_url('assets/img/logo.webp')) ?>" alt="goTurismCol">
+      <img class="brand-logo" src="<?= e(asset_url('assets/img/logo.webp')) ?>" alt="goTurismCol">
       <span class="brand-name">go<span class="brand-accent">Turism</span><span class="brand-accent-secondary">Col</span></span>
     </a>
 

@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Publicar experiencia | <?= e(config('app.app_name')) ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
+  <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body>
 <?php include __DIR__ . '/../app/views/partials/nav.php'; ?>

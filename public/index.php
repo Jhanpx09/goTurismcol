@@ -34,13 +34,13 @@ $destinos_destacados = $pdo->query("
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e(config('app.app_name')) ?></title>
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
+  <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body>
 <?php include __DIR__ . '/../app/views/partials/nav.php'; ?>
 
 <main class="page">
-  <section class="hero" style="--hero-image: url('<?= e(base_url('assets/img/main.webp')) ?>');">
+  <section class="hero" style="--hero-image: url('<?= e(asset_url('assets/img/main.webp')) ?>');">
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1>Planificación de viajes con información organizada</h1>
@@ -87,7 +87,7 @@ $destinos_destacados = $pdo->query("
                   >
                     <span class="flag-sphere flag-sphere--xs">
                       <?php if (!empty($d['bandera_path'])): ?>
-                        <img src="<?= e(base_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
+                        <img src="<?= e(asset_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
                       <?php else: ?>
                         <span class="flag-fallback"><?= e(substr($d['pais'], 0, 1)) ?></span>
                       <?php endif; ?>
@@ -103,7 +103,7 @@ $destinos_destacados = $pdo->query("
         <p class="helper-text">La información se administra internamente e incluye la fecha de última actualización.</p>
       </section>
 
-      <section class="card experience-card" style="--experience-image: url('<?= e(base_url('assets/img/experience.webp')) ?>');">
+      <section class="card experience-card" style="--experience-image: url('<?= e(asset_url('assets/img/plub_epxence.webp')) ?>');">
         <div class="experience-overlay"></div>
         <div class="experience-content">
           <h2>Experiencias de viajeros</h2>
@@ -130,7 +130,7 @@ $destinos_destacados = $pdo->query("
           <div class="destinations-grid">
             <?php foreach ($destinos_destacados as $d): ?>
               <article class="destination-card">
-                <img class="destination-image" src="<?= e(base_url($d['imagen_path'])) ?>" alt="<?= e($d['titulo']) ?>">
+                <img class="destination-image" src="<?= e(asset_url($d['imagen_path'])) ?>" alt="<?= e($d['titulo']) ?>">
                 <div class="destination-body">
                   <div class="destination-meta">
                     <span><?= e($d['pais']) ?></span>

@@ -19,6 +19,22 @@ function base_url(string $path='') : string {
   return $path ? $base . '/' . $path : $base;
 }
 
+function asset_url(string $path='') : string {
+  if ($path === '') return base_url('');
+  if (preg_match('#^(https?:)?//#i', $path) || str_starts_with($path, 'data:')) {
+    return $path;
+  }
+  $trimmed = ltrim($path, '/');
+  $public_root = realpath(__DIR__ . '/../../public');
+  $full_path = $public_root ? $public_root . '/' . $trimmed : null;
+  $version = ($full_path && is_file($full_path)) ? filemtime($full_path) : null;
+  $url = base_url($trimmed);
+  if ($version) {
+    $url .= (strpos($url, '?') === false ? '?v=' : '&v=') . $version;
+  }
+  return $url;
+}
+
 function redirect(string $path) : void {
   header("Location: " . base_url($path));
   exit;

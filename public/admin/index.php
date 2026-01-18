@@ -93,14 +93,14 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel administrativo | <?= e(config('app.app_name')) ?></title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-  <link href="<?= e(base_url('assets/css/app.css')) ?>" rel="stylesheet">
+  <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body class="admin-body">
 <div class="admin-shell">
   <aside class="admin-sidebar">
     <div class="admin-sidebar-header">
       <div class="admin-brand">
-        <img class="admin-logo" src="<?= e(base_url('assets/img/logo.webp')) ?>" alt="<?= e(config('app.app_name')) ?>">
+        <img class="admin-logo" src="<?= e(asset_url('assets/img/logo.webp')) ?>" alt="<?= e(config('app.app_name')) ?>">
         <span>Panel admin</span>
       </div>
     </div>

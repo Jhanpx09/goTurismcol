@@ -255,7 +255,7 @@ $page_subtitle = 'Gestiona la seccion de publicidad en la portada.';
             <div class="border rounded p-2 bg-light">
               <div class="small text-secondary mb-1">Vista previa</div>
               <?php if (!empty($edit_item['imagen_path'])): ?>
-                <img class="img-fluid rounded featured-preview" src="<?= e(base_url($edit_item['imagen_path'])) ?>" alt="Imagen actual" style="max-height:140px;">
+                <img class="img-fluid rounded featured-preview" src="<?= e(asset_url($edit_item['imagen_path'])) ?>" alt="Imagen actual" style="max-height:140px;">
               <?php else: ?>
                 <img class="img-fluid rounded featured-preview" alt="Vista previa" style="display:none; max-height:140px;">
               <?php endif; ?>
@@ -285,7 +285,7 @@ $page_subtitle = 'Gestiona la seccion de publicidad en la portada.';
               <td><?= (int)$it['id_destacado'] ?></td>
               <td>
                 <?php if (!empty($it['imagen_path'])): ?>
-                  <img src="<?= e(base_url($it['imagen_path'])) ?>" alt="Imagen" width="72" height="72" class="rounded" style="object-fit:cover;">
+                  <img src="<?= e(asset_url($it['imagen_path'])) ?>" alt="Imagen" width="72" height="72" class="rounded" style="object-fit:cover;">
                 <?php else: ?>
                   <span class="text-secondary small">Sin imagen</span>
                 <?php endif; ?>
