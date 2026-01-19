@@ -43,6 +43,22 @@ CREATE TABLE IF NOT EXISTS destino_destacado (
   CONSTRAINT fk_dest_destacado FOREIGN KEY (id_destino) REFERENCES destino(id_destino) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS hero_slide (
+  id_slide INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(180) NOT NULL,
+  descripcion TEXT NOT NULL,
+  enlace_texto VARCHAR(120) NOT NULL,
+  enlace_url VARCHAR(255) NOT NULL,
+  imagen_path VARCHAR(255) NOT NULL,
+  orden INT NOT NULL DEFAULT 0,
+  intervalo_segundos INT NOT NULL DEFAULT 7,
+  estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+  fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Si la tabla hero_slide ya existe, ejecutar una vez:
+-- ALTER TABLE hero_slide ADD COLUMN intervalo_segundos INT NOT NULL DEFAULT 7;
+
 CREATE TABLE IF NOT EXISTS requisito_viaje (
   id_requisito INT AUTO_INCREMENT PRIMARY KEY,
   id_destino INT NOT NULL,

@@ -23,6 +23,7 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
   <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body class="admin-body">
+<canvas class="admin-particles" id="admin-particles" aria-hidden="true"></canvas>
 <div class="admin-shell">
   <aside class="admin-sidebar">
     <div class="admin-sidebar-header">
@@ -45,6 +46,10 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
         <a class="admin-nav-link <?= admin_nav_active('destinos_destacados.php', $current) ?>" href="<?= e(base_url('admin/destinos_destacados.php')) ?>">
           <span class="material-icons-round">stars</span>
           Destinos destacados
+        </a>
+        <a class="admin-nav-link <?= admin_nav_active('hero_slider.php', $current) ?>" href="<?= e(base_url('admin/hero_slider.php')) ?>">
+          <span class="material-icons-round">slideshow</span>
+          Slider portada
         </a>
       </div>
       <div class="admin-nav-section">

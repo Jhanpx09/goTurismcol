@@ -21,6 +21,12 @@ try {
 } catch (PDOException $e) {
   $destinos_destacados = 0;
 }
+$hero_slides = 0;
+try {
+  $hero_slides = (int)$pdo->query("SELECT COUNT(*) FROM hero_slide WHERE estado='activo'")->fetchColumn();
+} catch (PDOException $e) {
+  $hero_slides = 0;
+}
 
 $activity = [];
 $latest_req = $pdo->query("
@@ -83,6 +89,8 @@ $admin_name = $admin['correo'] ?? 'Administrador';
 $avatar = strtoupper(substr($admin_name, 0, 2));
 $destacado_status_label = $destinos_destacados > 0 ? 'ACTIVO' : 'SIN CONFIGURAR';
 $destacado_status_class = $destinos_destacados > 0 ? 'admin-status admin-status--success' : 'admin-status admin-status--muted';
+$hero_status_label = $hero_slides > 0 ? 'ACTIVO' : 'SIN CONFIGURAR';
+$hero_status_class = $hero_slides > 0 ? 'admin-status admin-status--success' : 'admin-status admin-status--muted';
 $moderacion_label = $pending_experiencias > 0 ? 'Revisar (' . $pending_experiencias . ')' : 'Sin pendientes';
 $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' : 'admin-btn admin-btn--muted';
 ?>
@@ -118,6 +126,10 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
         <a class="admin-nav-link <?= admin_nav_active('destinos_destacados.php', $current) ?>" href="<?= e(base_url('admin/destinos_destacados.php')) ?>">
           <span class="material-icons-round">stars</span>
           Destinos destacados
+        </a>
+        <a class="admin-nav-link <?= admin_nav_active('hero_slider.php', $current) ?>" href="<?= e(base_url('admin/hero_slider.php')) ?>">
+          <span class="material-icons-round">slideshow</span>
+          Slider portada
         </a>
       </div>
       <div class="admin-nav-section">
@@ -200,6 +212,21 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
               <p>Gestionar la seccion de publicidad y banners en la portada.</p>
               <a class="admin-card-link" href="<?= e(base_url('admin/destinos_destacados.php')) ?>">
                 Gestionar destacados
+                <span class="material-icons-round">arrow_forward</span>
+              </a>
+            </article>
+
+            <article class="admin-card" style="--accent:#0ea5e9; --accent-soft:#e0f2fe; --accent-border:rgba(14, 165, 233, 0.3);">
+              <div class="admin-card-top">
+                <div class="admin-card-icon">
+                  <span class="material-icons-round">slideshow</span>
+                </div>
+                <span class="<?= $hero_status_class ?>"><?= e($hero_status_label) ?></span>
+              </div>
+              <h3>Slider portada</h3>
+              <p>Configurar imagenes, textos y enlaces del hero principal.</p>
+              <a class="admin-card-link" href="<?= e(base_url('admin/hero_slider.php')) ?>">
+                Gestionar slider
                 <span class="material-icons-round">arrow_forward</span>
               </a>
             </article>

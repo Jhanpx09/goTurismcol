@@ -19,6 +19,17 @@ $stats = $pdo->query("
     (SELECT COUNT(*) FROM experiencia_viajero WHERE estado_moderacion='aprobada') AS total_experiencias,
     (SELECT COUNT(*) FROM destino WHERE estado='activo') AS total_destinos
 ")->fetch();
+$hero_slides = [];
+try {
+  $hero_slides = $pdo->query("
+    SELECT id_slide, titulo, descripcion, enlace_texto, enlace_url, imagen_path, intervalo_segundos
+    FROM hero_slide
+    WHERE estado='activo'
+    ORDER BY orden ASC, id_slide DESC
+  ")->fetchAll();
+} catch (PDOException $e) {
+  $hero_slides = [];
+}
 $destinos_destacados = $pdo->query("
   SELECT dd.id_destacado, dd.titulo, dd.descripcion, dd.imagen_path, dd.id_destino, d.pais, d.ciudad
   FROM destino_destacado dd
@@ -40,16 +51,46 @@ $destinos_destacados = $pdo->query("
 <?php include __DIR__ . '/../app/views/partials/nav.php'; ?>
 
 <main class="page">
-  <section class="hero" style="--hero-image: url('<?= e(asset_url('assets/img/main.webp')) ?>');">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1>Planificación de viajes con información organizada</h1>
-      <p>Consulta requisitos y trámites por destino, revisa experiencias de otros viajeros y publica la tuya de forma segura y moderada.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="<?= e(base_url('requisitos.php')) ?>">Empezar ahora</a>
+  <?php if ($hero_slides): ?>
+    <?php $hero_first = $hero_slides[0]; ?>
+    <section class="hero hero-slider">
+      <div class="hero-slider-track">
+        <?php foreach ($hero_slides as $idx => $slide): ?>
+          <div
+            class="hero-slide <?= $idx === 0 ? 'is-active' : '' ?>"
+            style="--hero-image: url('<?= e(asset_url($slide['imagen_path'])) ?>');"
+            data-title="<?= e($slide['titulo']) ?>"
+            data-description="<?= e($slide['descripcion']) ?>"
+            data-cta-text="<?= e($slide['enlace_texto']) ?>"
+            data-cta-url="<?= e($slide['enlace_url']) ?>"
+            data-interval="<?= (int)($slide['intervalo_segundos'] ?? 7) ?>"
+          ></div>
+        <?php endforeach; ?>
       </div>
-    </div>
-  </section>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="hero-title-text"><?= e($hero_first['titulo']) ?></span>
+          <span class="hero-title-caret" aria-hidden="true">|</span>
+        </h1>
+        <p class="hero-description"><?= e($hero_first['descripcion']) ?></p>
+        <div class="hero-actions">
+          <a class="btn btn-primary hero-cta" href="<?= e($hero_first['enlace_url']) ?>"><?= e($hero_first['enlace_texto']) ?></a>
+        </div>
+      </div>
+    </section>
+  <?php else: ?>
+    <section class="hero" style="--hero-image: url('<?= e(asset_url('assets/img/main.webp')) ?>');">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Planificaci¢n de viajes con informaci¢n organizada</h1>
+        <p>Consulta requisitos y tr mites por destino, revisa experiencias de otros viajeros y publica la tuya de forma segura y moderada.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="<?= e(base_url('requisitos.php')) ?>">Empezar ahora</a>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
 
   <div class="content-grid">
     <div class="col-main">
@@ -286,6 +327,87 @@ $destinos_destacados = $pdo->query("
 
     syncSelected();
   });
+
+  (function () {
+    var slider = document.querySelector('.hero-slider');
+    if (!slider) return;
+    var slides = Array.prototype.slice.call(slider.querySelectorAll('.hero-slide'));
+    if (!slides.length) return;
+
+    var titleText = slider.querySelector('.hero-title-text');
+    var descEl = slider.querySelector('.hero-description');
+    var ctaEl = slider.querySelector('.hero-cta');
+    var currentIndex = 0;
+    var typingTimer = null;
+    var timer = null;
+    var defaultSeconds = 7;
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function typeTitle(text) {
+      if (!titleText) return;
+      if (typingTimer) {
+        clearTimeout(typingTimer);
+        typingTimer = null;
+      }
+      titleText.textContent = '';
+      if (prefersReduced) {
+        titleText.textContent = text;
+        return;
+      }
+      var idx = 0;
+      function step() {
+        titleText.textContent = text.slice(0, idx);
+        idx += 1;
+        if (idx <= text.length) {
+          typingTimer = window.setTimeout(step, 40);
+        }
+      }
+      step();
+    }
+
+    function setSlide(index) {
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('is-active', i === index);
+      });
+      var slide = slides[index];
+      if (!slide) return;
+      var title = slide.getAttribute('data-title') || '';
+      var description = slide.getAttribute('data-description') || '';
+      var ctaText = slide.getAttribute('data-cta-text') || 'Ver mas';
+      var ctaUrl = slide.getAttribute('data-cta-url') || '#';
+      if (descEl) descEl.textContent = description;
+      if (ctaEl) {
+        ctaEl.textContent = ctaText;
+        ctaEl.setAttribute('href', ctaUrl);
+      }
+      typeTitle(title);
+    }
+
+    function getSlideDelay(slide) {
+      if (!slide) return defaultSeconds * 1000;
+      var seconds = parseInt(slide.getAttribute('data-interval'), 10);
+      if (!seconds || seconds < 3) seconds = defaultSeconds;
+      if (seconds > 30) seconds = 30;
+      return seconds * 1000;
+    }
+
+    function scheduleNext() {
+      if (prefersReduced || slides.length <= 1) return;
+      if (timer) {
+        clearTimeout(timer);
+      }
+      var delay = getSlideDelay(slides[currentIndex]);
+      timer = window.setTimeout(function () {
+        currentIndex = (currentIndex + 1) % slides.length;
+        setSlide(currentIndex);
+        scheduleNext();
+      }, delay);
+    }
+
+    setSlide(currentIndex);
+    scheduleNext();
+  })();
 </script>
 </body>
 </html>
+
