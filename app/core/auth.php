@@ -4,7 +4,11 @@ require_once __DIR__ . '/helpers.php';
 
 function load_user_with_roles(int $id): array {
   $pdo = db();
-  $stmt = $pdo->prepare("SELECT id_usuario, correo, fecha_registro, estado FROM usuario WHERE id_usuario = ?");
+  $stmt = $pdo->prepare("
+    SELECT id_usuario, correo, nombre, apellido, telefono, id_destino, foto_path, fecha_registro, estado
+    FROM usuario
+    WHERE id_usuario = ?
+  ");
   $stmt->execute([$id]);
   $u = $stmt->fetch();
   if (!$u) return [];

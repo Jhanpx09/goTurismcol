@@ -61,5 +61,69 @@
         localStorage.setItem(storageKey, isDark ? 'dark' : 'light');
       });
     }
+
+    var header = document.querySelector('.site-header');
+    if (header) {
+      body.classList.add('has-site-header');
+      var updateHeaderOffset = function () {
+        body.style.setProperty('--site-header-height', header.offsetHeight + 'px');
+      };
+      updateHeaderOffset();
+      window.addEventListener('resize', function () {
+        window.requestAnimationFrame(updateHeaderOffset);
+      });
+    }
+
+    var destinosLink = document.querySelector('.nav-link-anchor');
+    var destinosSection = document.getElementById('destinos');
+    var defaultActive = document.querySelector('.nav-links a.is-active');
+
+    if (destinosLink && destinosSection) {
+      var setDestinosActive = function (active) {
+        if (active) {
+          destinosLink.classList.add('is-active');
+          destinosLink.setAttribute('aria-current', 'page');
+          if (defaultActive && defaultActive !== destinosLink) {
+            defaultActive.classList.remove('is-active');
+            defaultActive.removeAttribute('aria-current');
+          }
+          return;
+        }
+        destinosLink.classList.remove('is-active');
+        destinosLink.removeAttribute('aria-current');
+        if (defaultActive && defaultActive !== destinosLink) {
+          defaultActive.classList.add('is-active');
+          defaultActive.setAttribute('aria-current', 'page');
+        }
+      };
+
+      var updateFromHash = function () {
+        if (window.location.hash === '#destinos') {
+          setDestinosActive(true);
+          return true;
+        }
+        setDestinosActive(false);
+        return false;
+      };
+
+      var observer = null;
+      if ('IntersectionObserver' in window) {
+        observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              setDestinosActive(true);
+            } else if (!updateFromHash()) {
+              setDestinosActive(false);
+            }
+          });
+        }, { threshold: 0.4 });
+        observer.observe(destinosSection);
+      } else {
+        updateFromHash();
+      }
+
+      window.addEventListener('hashchange', updateFromHash);
+      updateFromHash();
+    }
   })();
 </script>

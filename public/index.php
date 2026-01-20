@@ -45,6 +45,7 @@ $destinos_destacados = $pdo->query("
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e(config('app.app_name')) ?></title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body>
@@ -109,33 +110,44 @@ $destinos_destacados = $pdo->query("
                 </option>
               <?php endforeach; ?>
             </select>
-            <div class="custom-select" data-select="destino-select">
-              <button class="custom-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
-                <span class="custom-select__value">Seleccione un destino</span>
-                <span class="custom-select__caret">▾</span>
-              </button>
-              <div class="custom-select__menu" role="listbox">
-                <div class="custom-select__search">
-                  <input type="text" placeholder="Buscar destino" aria-label="Buscar destino">
+            <div class="flag-search flag-search--inline" id="destino-search">
+              <div class="flag-search__wrapper">
+                <span class="material-icons-round flag-search__icon" aria-hidden="true">search</span>
+                <input
+                  class="flag-search__input"
+                  type="text"
+                  id="destino-search-input"
+                  placeholder="Buscar pais..."
+                  autocomplete="off"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-controls="destino-search-list"
+                >
+                <div class="flag-search__list" id="destino-search-list" role="listbox">
+                  <?php foreach ($destinos as $d): ?>
+                    <button
+                      class="flag-search__option"
+                      type="button"
+                      data-value="<?= (int)$d['id_destino'] ?>"
+                      data-label="<?= e($d['pais'] . ' ' . ($d['ciudad'] ?? '')) ?>"
+                    >
+                      <span class="flag-sphere flag-sphere--xs">
+                        <?php if (!empty($d['bandera_path'])): ?>
+                          <img src="<?= e(asset_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
+                        <?php else: ?>
+                          <span class="flag-fallback"><?= e(substr($d['pais'], 0, 1)) ?></span>
+                        <?php endif; ?>
+                      </span>
+                      <span class="flag-search__label">
+                        <span class="flag-search__country"><?= e($d['pais']) ?></span>
+                        <?php if (!empty($d['ciudad'])): ?>
+                          <span class="flag-search__city"><?= e($d['ciudad']) ?></span>
+                        <?php endif; ?>
+                      </span>
+                    </button>
+                  <?php endforeach; ?>
+                  <div class="flag-search__empty">Sin resultados</div>
                 </div>
-                <?php foreach ($destinos as $d): ?>
-                  <button
-                    class="custom-select__option"
-                    type="button"
-                    data-value="<?= (int)$d['id_destino'] ?>"
-                    data-label="<?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?>"
-                    role="option"
-                  >
-                    <span class="flag-sphere flag-sphere--xs">
-                      <?php if (!empty($d['bandera_path'])): ?>
-                        <img src="<?= e(asset_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
-                      <?php else: ?>
-                        <span class="flag-fallback"><?= e(substr($d['pais'], 0, 1)) ?></span>
-                      <?php endif; ?>
-                    </span>
-                    <span class="custom-select__label"><?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?></span>
-                  </button>
-                <?php endforeach; ?>
               </div>
             </div>
           </div>
@@ -327,6 +339,118 @@ $destinos_destacados = $pdo->query("
 
     syncSelected();
   });
+
+  (function () {
+    var search = document.getElementById('destino-search');
+    if (!search) return;
+
+    var input = search.querySelector('.flag-search__input');
+    var options = Array.prototype.slice.call(search.querySelectorAll('.flag-search__option'));
+    var empty = search.querySelector('.flag-search__empty');
+    var select = document.getElementById('destino-select');
+    var selectedLabel = '';
+
+    if (select && select.value) {
+      var selectedOption = select.options[select.selectedIndex];
+      if (selectedOption) selectedLabel = selectedOption.textContent.trim();
+      if (input && selectedLabel) input.value = selectedLabel;
+    }
+
+    function openList() {
+      search.classList.add('is-open');
+      if (input) input.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeList() {
+      search.classList.remove('is-open');
+      if (input) {
+        input.setAttribute('aria-expanded', 'false');
+        input.value = selectedLabel;
+      }
+    }
+
+    function filterOptions(query) {
+      var term = (query || '').toLowerCase().trim();
+      var matches = 0;
+      options.forEach(function (option) {
+        var label = option.getAttribute('data-label') || option.textContent || '';
+        var isMatch = !term || label.toLowerCase().indexOf(term) !== -1;
+        option.classList.toggle('is-hidden', !isMatch);
+        if (isMatch) matches += 1;
+      });
+      if (empty) empty.style.display = matches ? 'none' : 'block';
+    }
+
+    function setActive(option) {
+      options.forEach(function (opt) { opt.classList.remove('is-active'); });
+      option.classList.add('is-active');
+    }
+
+    function optionLabel(option) {
+      var country = option.querySelector('.flag-search__country');
+      var city = option.querySelector('.flag-search__city');
+      var label = country ? country.textContent : option.textContent;
+      if (city && city.textContent) {
+        label += ' - ' + city.textContent;
+      }
+      return label;
+    }
+
+    if (input) {
+      input.addEventListener('focus', function () {
+        openList();
+        filterOptions(input.value === selectedLabel ? '' : input.value);
+        input.select();
+      });
+
+      input.addEventListener('click', function () {
+        openList();
+        filterOptions(input.value === selectedLabel ? '' : input.value);
+      });
+
+      input.addEventListener('input', function () {
+        openList();
+        filterOptions(input.value);
+      });
+
+      input.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          closeList();
+          input.blur();
+        }
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          for (var i = 0; i < options.length; i += 1) {
+            if (!options[i].classList.contains('is-hidden')) {
+              options[i].focus();
+              break;
+            }
+          }
+        }
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+      });
+    }
+
+    options.forEach(function (option) {
+      option.addEventListener('click', function () {
+        var value = option.getAttribute('data-value');
+        var label = optionLabel(option);
+        selectedLabel = label;
+        if (input) input.value = label;
+        if (select) select.value = value;
+        setActive(option);
+        closeList();
+      });
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!search.contains(event.target)) closeList();
+    });
+
+    filterOptions('');
+  })();
 
   (function () {
     var slider = document.querySelector('.hero-slider');

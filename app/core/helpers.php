@@ -35,6 +35,16 @@ function asset_url(string $path='') : string {
   return $url;
 }
 
+function user_photo_path(?string $path): string {
+  return $path ?: 'assets/img/user-default.svg';
+}
+
+function user_display_name(?string $nombre, ?string $apellido, ?string $correo = ''): string {
+  $full = trim(($nombre ?? '') . ' ' . ($apellido ?? ''));
+  if ($full !== '') return $full;
+  return $correo ?: 'Viajero';
+}
+
 function redirect(string $path) : void {
   header("Location: " . base_url($path));
   exit;

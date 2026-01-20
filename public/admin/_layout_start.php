@@ -65,6 +65,10 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
             <span class="admin-nav-badge"><?= (int)$pending_experiencias ?></span>
           <?php endif; ?>
         </a>
+        <a class="admin-nav-link <?= admin_nav_active('usuarios.php', $current) ?>" href="<?= e(base_url('admin/usuarios.php')) ?>">
+          <span class="material-icons-round">group</span>
+          Usuarios y roles
+        </a>
         <a class="admin-nav-link <?= admin_nav_active('avisos.php', $current) ?>" href="<?= e(base_url('admin/avisos.php')) ?>">
           <span class="material-icons-round">campaign</span>
           Avisos

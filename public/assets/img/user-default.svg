@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title>Avatar por defecto</title>
+  <desc>Icono de usuario generico en un circulo.</desc>
+  <circle cx="64" cy="64" r="64" fill="#e2e8f0"/>
+  <circle cx="64" cy="52" r="24" fill="#94a3b8"/>
+  <path d="M24 112c6-22 26-36 40-36s34 14 40 36" fill="#94a3b8"/>
+</svg>

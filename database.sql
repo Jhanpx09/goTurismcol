@@ -4,6 +4,11 @@ USE umb_viajes;
 CREATE TABLE IF NOT EXISTS usuario (
   id_usuario INT AUTO_INCREMENT PRIMARY KEY,
   correo VARCHAR(190) NOT NULL UNIQUE,
+  nombre VARCHAR(120) NULL,
+  apellido VARCHAR(120) NULL,
+  telefono VARCHAR(40) NULL,
+  id_destino INT NULL,
+  foto_path VARCHAR(255) NULL,
   contrasena_hash VARCHAR(255) NOT NULL,
   fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo'
@@ -31,6 +36,13 @@ CREATE TABLE IF NOT EXISTS destino (
   bandera_path VARCHAR(255) NULL,
   estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo'
 ) ENGINE=InnoDB;
+
+-- Si la tabla usuario ya existe, ejecutar una vez:
+-- ALTER TABLE usuario ADD COLUMN nombre VARCHAR(120) NULL;
+-- ALTER TABLE usuario ADD COLUMN apellido VARCHAR(120) NULL;
+-- ALTER TABLE usuario ADD COLUMN telefono VARCHAR(40) NULL;
+-- ALTER TABLE usuario ADD COLUMN id_destino INT NULL;
+-- ALTER TABLE usuario ADD COLUMN foto_path VARCHAR(255) NULL;
 
 CREATE TABLE IF NOT EXISTS destino_destacado (
   id_destacado INT AUTO_INCREMENT PRIMARY KEY,

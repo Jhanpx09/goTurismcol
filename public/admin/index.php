@@ -145,6 +145,10 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
             <span class="admin-nav-badge"><?= (int)$pending_experiencias ?></span>
           <?php endif; ?>
         </a>
+        <a class="admin-nav-link <?= admin_nav_active('usuarios.php', $current) ?>" href="<?= e(base_url('admin/usuarios.php')) ?>">
+          <span class="material-icons-round">group</span>
+          Usuarios y roles
+        </a>
         <a class="admin-nav-link <?= admin_nav_active('avisos.php', $current) ?>" href="<?= e(base_url('admin/avisos.php')) ?>">
           <span class="material-icons-round">campaign</span>
           Avisos
@@ -258,6 +262,20 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
                   <?= e($moderacion_label) ?>
                 </a>
               </div>
+            </article>
+
+            <article class="admin-card" style="--accent:#14b8a6; --accent-soft:#ccfbf1; --accent-border:rgba(20, 184, 166, 0.3);">
+              <div class="admin-card-top">
+                <div class="admin-card-icon">
+                  <span class="material-icons-round">group</span>
+                </div>
+              </div>
+              <h3>Usuarios y roles</h3>
+              <p>Administrar perfiles, roles y estados de los usuarios registrados.</p>
+              <a class="admin-card-link" href="<?= e(base_url('admin/usuarios.php')) ?>">
+                Gestionar usuarios
+                <span class="material-icons-round">arrow_forward</span>
+              </a>
             </article>
 
             <article class="admin-card admin-card--wide admin-card--row" style="--accent:#f97316; --accent-soft:#ffedd5; --accent-border:rgba(249, 115, 22, 0.3);">
