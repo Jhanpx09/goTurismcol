@@ -21,10 +21,10 @@ if ($destino_id) {
 
   if ($destino) {
     $stmt = $pdo->prepare("
-      SELECT titulo_requisito, descripcion_requisito, tipo_requisito, fuente_oficial, fecha_ultima_actualizacion
+      SELECT id_requisito, titulo_requisito, descripcion_requisito, tipo_requisito, icono, fuente_oficial, fecha_ultima_actualizacion
       FROM requisito_viaje
       WHERE id_destino=? AND estado='vigente'
-      ORDER BY tipo_requisito, titulo_requisito
+      ORDER BY id_requisito ASC
     ");
     $stmt->execute([$destino_id]);
     $requisitos = $stmt->fetchAll();
@@ -82,6 +82,13 @@ foreach ($requisitos as $r) {
   }
   $grouped[$bucket][] = $r;
 }
+$icon_svgs = [
+  'fiber_manual_record' => '<svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="16" cy="16" r="9"></circle></svg>',
+  'warning' => '<svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path d="M16 7 7 25h18L16 7z"></path><line x1="16" y1="13" x2="16" y2="18"></line><circle cx="16" cy="21.5" r="1.2"></circle></svg>',
+  'check_circle' => '<svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="16" cy="16" r="9"></circle><path d="m12.5 16.5 2.6 2.6 4.9-5.1"></path></svg>',
+  'assignment_ind' => '<svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3"></rect><circle cx="13" cy="14" r="2.4"></circle><path d="M11 20h10"></path></svg>',
+  'info' => '<svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="16" cy="16" r="9"></circle><line x1="16" y1="14" x2="16" y2="21"></line><circle cx="16" cy="10.5" r="1.2"></circle></svg>',
+];
 ?>
 <!doctype html>
 <html lang="es">
@@ -90,7 +97,7 @@ foreach ($requisitos as $r) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Requisitos | <?= e(config('app.app_name')) ?></title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-  <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
+  <link href="<?= e(asset_url('assets/css/app.css?v=' . filemtime(__DIR__ . '/assets/css/app.css'))) ?>" rel="stylesheet">
 </head>
 <body>
 <?php include __DIR__ . '/../app/views/partials/nav.php'; ?>
@@ -98,7 +105,8 @@ foreach ($requisitos as $r) {
 <main class="requirements-page">
   <section class="requirements-hero">
     <h1>Requisitos por destino</h1>
-    <p>Selecciona un paÃ­s del carrusel para visualizar los requisitos de viaje, trÃ¡mites migratorios y recomendaciones de salud actualizados.</p>
+    <p class="audience-note" role="note">Aviso: Este portal y todos los requisitos están dirigidos únicamente a ciudadanos colombianos.</p>
+    <p>Selecciona un pais del carrusel para visualizar los requisitos de viaje, tramites migratorios y recomendaciones de salud actualizados.</p>
   </section>
 
   <section class="flag-carousel">
@@ -198,12 +206,26 @@ foreach ($requisitos as $r) {
             </div>
 
             <?php if (!$items): ?>
-              <p class="helper-text">No hay requisitos registrados para esta categorÃ­a.</p>
+              <p class="helper-text">No hay requisitos registrados para esta categori­a.</p>
             <?php else: ?>
               <div class="requirements-list">
                 <?php foreach ($items as $r): ?>
+                  <?php
+                    $icon_name = trim($r['icono'] ?? '');
+                    if (!$icon_name || !isset($icon_svgs[$icon_name])) {
+                      $icon_name = 'info';
+                      if ($key === 'obligatorio') {
+                        $icon_name = 'warning';
+                      } elseif ($key === 'recomendado') {
+                        $icon_name = 'check_circle';
+                      }
+                    }
+                  ?>
                   <article class="requirement-item">
-                    <div class="requirement-icon">âœ”</div>
+                    <?php $icon_svg = $icon_svgs[$icon_name] ?? $icon_svgs['info']; ?>
+                    <div class="requirement-icon" data-icon="<?= e($icon_name) ?>" aria-hidden="true">
+                      <?= $icon_svg ?>
+                    </div>
                     <div class="requirement-body">
                       <h3><?= e($r['titulo_requisito']) ?></h3>
                       <p><?= nl2br(e($r['descripcion_requisito'])) ?></p>
@@ -258,7 +280,7 @@ foreach ($requisitos as $r) {
       </div>
 
       <div class="requirements-footer">
-        <a class="btn btn-primary" href="<?= e(base_url('requisitos_pdf.php?destino=' . (int)$destino_id)) ?>">Descargar guÃ­a completa (PDF)</a>
+        <a class="btn btn-primary" href="<?= e(base_url('requisitos_pdf.php?destino=' . (int)$destino_id)) ?>">Descargar gui­a completa (PDF)</a>
       </div>
     <?php endif; ?>
   </section>
@@ -451,4 +473,3 @@ foreach ($requisitos as $r) {
 </script>
 </body>
 </html>
-

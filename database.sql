@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS requisito_viaje (
   titulo_requisito VARCHAR(180) NOT NULL,
   descripcion_requisito TEXT NOT NULL,
   tipo_requisito VARCHAR(80) NOT NULL,
+  icono VARCHAR(60) NULL,
   fuente_oficial TEXT NULL,
   fecha_ultima_actualizacion DATE NOT NULL,
   creado_por INT NOT NULL,
@@ -84,6 +85,9 @@ CREATE TABLE IF NOT EXISTS requisito_viaje (
   CONSTRAINT fk_req_destino FOREIGN KEY (id_destino) REFERENCES destino(id_destino) ON DELETE CASCADE,
   CONSTRAINT fk_req_creador FOREIGN KEY (creado_por) REFERENCES usuario(id_usuario) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
+
+-- Si la tabla requisito_viaje ya existe, ejecutar una vez:
+-- ALTER TABLE requisito_viaje ADD COLUMN icono VARCHAR(60) NULL;
 
 CREATE TABLE IF NOT EXISTS actualizacion_requisito (
   id_actualizacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -148,3 +152,7 @@ INSERT IGNORE INTO destino (id_destino, pais, ciudad, descripcion_general, estad
 INSERT IGNORE INTO requisito_viaje (id_requisito, id_destino, titulo_requisito, descripcion_requisito, tipo_requisito, fuente_oficial, fecha_ultima_actualizacion, creado_por, estado)
 VALUES
   (1,2,'Pasaporte vigente','El viajero debe contar con pasaporte vigente durante el ingreso y permanencia según el caso.','documental','Fuente oficial recomendada: sitios gubernamentales del país destino.','2025-01-01',1,'vigente');
+
+
+INSERT INTO `destino` (`id_destino`, `pais`, `ciudad`, `descripcion_general`, `estado`, `bandera_path`) 
+VALUES (NULL, 'Andorra', NULL, NULL, 'activo', 'assets/flags/ad.png') 

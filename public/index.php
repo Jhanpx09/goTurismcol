@@ -72,9 +72,9 @@ $destinos_destacados = $pdo->query("
       <div class="hero-content">
         <h1 class="hero-title">
           <span class="hero-title-text"><?= e($hero_first['titulo']) ?></span>
-          <span class="hero-title-caret" aria-hidden="true">|</span>
         </h1>
         <p class="hero-description"><?= e($hero_first['descripcion']) ?></p>
+        <p class="audience-note" role="note">Aviso: Este portal y todos los requisitos están dirigidos únicamente a ciudadanos colombianos.</p>
         <div class="hero-actions">
           <a class="btn btn-primary hero-cta" href="<?= e($hero_first['enlace_url']) ?>"><?= e($hero_first['enlace_texto']) ?></a>
         </div>
@@ -86,6 +86,7 @@ $destinos_destacados = $pdo->query("
       <div class="hero-content">
         <h1>Planificaci¢n de viajes con informaci¢n organizada</h1>
         <p>Consulta requisitos y tr mites por destino, revisa experiencias de otros viajeros y publica la tuya de forma segura y moderada.</p>
+        <p class="audience-note" role="note">Aviso: Este portal y todos los requisitos están dirigidos únicamente a ciudadanos colombianos.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="<?= e(base_url('requisitos.php')) ?>">Empezar ahora</a>
         </div>

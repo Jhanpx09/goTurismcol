@@ -13,6 +13,19 @@ function requisito_tipo_label(string $tipo): string {
   return $map[$key] ?? ucfirst($tipo);
 }
 
+$requisito_iconos = [
+  'fiber_manual_record' => 'Vineta',
+  'warning' => 'Advertencia',
+  'check_circle' => 'Check',
+  'assignment_ind' => 'Pasaporte',
+];
+$requisito_icono_default = 'check_circle';
+
+function requisito_icono_normalize(?string $icono, array $permitidos, string $fallback): string {
+  $icono = trim((string)$icono);
+  return ($icono && isset($permitidos[$icono])) ? $icono : $fallback;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   csrf_check();
   $action = $_POST['action'] ?? '';
@@ -22,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
     $tipo = trim($_POST['tipo'] ?? '');
     $desc = trim($_POST['descripcion'] ?? '');
+    $icono = requisito_icono_normalize($_POST['icono'] ?? '', $requisito_iconos, $requisito_icono_default);
     $fuente = trim($_POST['fuente'] ?? '');
     $fecha = trim($_POST['fecha'] ?? '');
 
@@ -34,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
       $stmt = $pdo->prepare("
-        INSERT INTO requisito_viaje (id_destino, titulo_requisito, descripcion_requisito, tipo_requisito, fuente_oficial, fecha_ultima_actualizacion, creado_por)
-        VALUES (?,?,?,?,?,?,?)
+        INSERT INTO requisito_viaje (id_destino, titulo_requisito, descripcion_requisito, tipo_requisito, icono, fuente_oficial, fecha_ultima_actualizacion, creado_por)
+        VALUES (?,?,?,?,?,?,?,?)
       ");
-      $stmt->execute([$id_destino, $titulo, $desc, $tipo, $fuente ?: null, $fecha, (int)$admin['id_usuario']]);
+      $stmt->execute([$id_destino, $titulo, $desc, $tipo, $icono, $fuente ?: null, $fecha, (int)$admin['id_usuario']]);
       if ($stmt->rowCount() > 0) {
         redirect('admin/requisitos.php?destino=' . $id_destino . '&created=1');
       } else {
@@ -63,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
     $tipo = trim($_POST['tipo'] ?? '');
     $desc = trim($_POST['descripcion'] ?? '');
+    $icono = requisito_icono_normalize($_POST['icono'] ?? '', $requisito_iconos, $requisito_icono_default);
     $fuente = trim($_POST['fuente'] ?? '');
     $fecha = $_POST['fecha'] ?? date('Y-m-d');
     $texto = trim($_POST['cambio'] ?? '');
@@ -75,9 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$errors) {
       $pdo->prepare("
         UPDATE requisito_viaje
-        SET titulo_requisito=?, descripcion_requisito=?, tipo_requisito=?, fuente_oficial=?, fecha_ultima_actualizacion=?
+        SET titulo_requisito=?, descripcion_requisito=?, tipo_requisito=?, icono=?, fuente_oficial=?, fecha_ultima_actualizacion=?
         WHERE id_requisito=?
-      ")->execute([$titulo, $desc, $tipo, $fuente ?: null, $fecha, $id]);
+      ")->execute([$titulo, $desc, $tipo, $icono, $fuente ?: null, $fecha, $id]);
       $pdo->prepare("INSERT INTO actualizacion_requisito (id_requisito, descripcion_cambio, actualizado_por) VALUES (?,?,?)")
           ->execute([$id, $texto, (int)$admin['id_usuario']]);
       redirect('admin/requisitos.php?destino=' . (int)($_POST['destino_id'] ?? 0));
@@ -120,6 +135,10 @@ if ($edit_id && $requisitos) {
     }
   }
 }
+$icono_selected_new = $requisito_icono_default;
+$icono_selected_edit = $edit_requisito
+  ? requisito_icono_normalize($edit_requisito['icono'] ?? '', $requisito_iconos, $requisito_icono_default)
+  : $requisito_icono_default;
 $page_title = 'Requisitos';
 $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
 ?>
@@ -178,6 +197,19 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
                 <option value="informacion">Informacion gral.</option>
               </select>
             </div>
+            <div class="col-12">
+              <label class="form-label small text-secondary">Icono</label>
+              <div class="d-flex flex-wrap gap-2">
+                <?php foreach ($requisito_iconos as $icon_value => $icon_label): ?>
+                  <?php $icon_id = 'icono-new-' . $icon_value; ?>
+                  <input class="btn-check" type="radio" name="icono" id="<?= e($icon_id) ?>" value="<?= e($icon_value) ?>" <?= $icon_value === $icono_selected_new ? 'checked' : '' ?>>
+                  <label class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" for="<?= e($icon_id) ?>">
+                    <span class="material-icons-round" aria-hidden="true"><?= e($icon_value) ?></span>
+                    <span><?= e($icon_label) ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
+            </div>
             <div class="col-md-2"><input class="form-control form-control-sm" type="date" name="fecha" value="<?= e(date('Y-m-d')) ?>" required></div>
             <div class="col-md-3"><input class="form-control form-control-sm" name="fuente" placeholder="Fuente oficial" required></div>
             <div class="col-12"><textarea class="form-control form-control-sm" name="descripcion" rows="3" placeholder="Descripcion" required></textarea></div>
@@ -206,6 +238,19 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
                 <option value="recomendado" <?= $edit_requisito['tipo_requisito']==='recomendado'?'selected':'' ?>>Recomendado</option>
                 <option value="informacion" <?= $edit_requisito['tipo_requisito']==='informacion'?'selected':'' ?>>Informacion gral.</option>
               </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label small text-secondary">Icono</label>
+              <div class="d-flex flex-wrap gap-2">
+                <?php foreach ($requisito_iconos as $icon_value => $icon_label): ?>
+                  <?php $icon_id = 'icono-edit-' . $icon_value; ?>
+                  <input class="btn-check" type="radio" name="icono" id="<?= e($icon_id) ?>" value="<?= e($icon_value) ?>" <?= $icon_value === $icono_selected_edit ? 'checked' : '' ?>>
+                  <label class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" for="<?= e($icon_id) ?>">
+                    <span class="material-icons-round" aria-hidden="true"><?= e($icon_value) ?></span>
+                    <span><?= e($icon_label) ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
             </div>
             <div class="col-md-2"><input class="form-control form-control-sm" type="date" name="fecha" value="<?= e($edit_requisito['fecha_ultima_actualizacion']) ?>" required></div>
             <div class="col-md-3"><input class="form-control form-control-sm" name="fuente" value="<?= e($edit_requisito['fuente_oficial']) ?>" placeholder="Fuente oficial (opcional)"></div>

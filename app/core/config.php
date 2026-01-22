@@ -2,7 +2,7 @@
 return [
   'db' => [
     'host' => '127.0.0.1',
-    'name' => 'umb_viajes',
+    'name' => 'goturismcol_database',
     'user' => 'root',
     'pass' => '',
     'charset' => 'utf8mb4',
@@ -12,6 +12,6 @@ return [
     'app_name' => 'goTurismCol',
   ],
   'security' => [
-    'session_name' => 'UMB_VIAJES_SESS',
+    'session_name' => 'jhanpx',
   ]
 ];
