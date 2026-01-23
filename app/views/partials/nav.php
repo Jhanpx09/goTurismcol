@@ -18,7 +18,7 @@ function nav_active(string $file, string $current): string {
       <a class="<?= nav_active('index.php', $current) ?>" href="<?= e(base_url('index.php')) ?>" <?= $current === 'index.php' ? 'aria-current="page"' : '' ?>>Inicio</a>
       <a class="<?= nav_active('requisitos.php', $current) ?>" href="<?= e(base_url('requisitos.php')) ?>" <?= $current === 'requisitos.php' ? 'aria-current="page"' : '' ?>>Requisitos</a>
       <a class="<?= nav_active('experiencias.php', $current) ?>" href="<?= e(base_url('experiencias.php')) ?>" <?= $current === 'experiencias.php' ? 'aria-current="page"' : '' ?>>Experiencias</a>
-      <a class="nav-link-anchor" href="<?= e(base_url('index.php')) ?>#destinos">Destinos</a>
+      <a class="<?= nav_active('index.php', $current) ?>" href="<?= e(base_url('index.php')) ?>#destinos" <?= $current === 'index.php' ? 'aria-current="page"' : '' ?>>Destinos</a>
     </div>
 
     <div class="nav-actions">

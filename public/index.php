@@ -72,9 +72,9 @@ $destinos_destacados = $pdo->query("
       <div class="hero-content">
         <h1 class="hero-title">
           <span class="hero-title-text"><?= e($hero_first['titulo']) ?></span>
+          <span class="hero-title-caret" aria-hidden="true">|</span>
         </h1>
         <p class="hero-description"><?= e($hero_first['descripcion']) ?></p>
-        <p class="audience-note" role="note">Aviso: Este portal y todos los requisitos están dirigidos únicamente a ciudadanos colombianos.</p>
         <div class="hero-actions">
           <a class="btn btn-primary hero-cta" href="<?= e($hero_first['enlace_url']) ?>"><?= e($hero_first['enlace_texto']) ?></a>
         </div>
@@ -84,11 +84,10 @@ $destinos_destacados = $pdo->query("
     <section class="hero" style="--hero-image: url('<?= e(asset_url('assets/img/main.webp')) ?>');">
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <h1>Planificaci¢n de viajes con informaci¢n organizada</h1>
-        <p>Consulta requisitos y tr mites por destino, revisa experiencias de otros viajeros y publica la tuya de forma segura y moderada.</p>
-        <p class="audience-note" role="note">Aviso: Este portal y todos los requisitos están dirigidos únicamente a ciudadanos colombianos.</p>
+        <h1>Titulo</h1>
+        <p>Descripcion del titulo</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="<?= e(base_url('requisitos.php')) ?>">Empezar ahora</a>
+          <a class="btn btn-primary" href="<?= e(base_url('requisitos.php')) ?>">Enlace</a>
         </div>
       </div>
     </section>
@@ -103,13 +102,7 @@ $destinos_destacados = $pdo->query("
         </div>
         <form class="requirements-form" method="get" action="<?= e(base_url('requisitos.php')) ?>">
           <div class="select-wrap">
-            <select class="select-native" name="destino" id="destino-select" required>
-              <option value="" selected disabled>Seleccione un destino</option>
-              <?php foreach ($destinos as $d): ?>
-                <option value="<?= (int)$d['id_destino'] ?>">
-                  <?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?>
-                </option>
-              <?php endforeach; ?>
+
             </select>
             <div class="flag-search flag-search--inline" id="destino-search">
               <div class="flag-search__wrapper">
