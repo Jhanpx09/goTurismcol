@@ -139,6 +139,36 @@ img {
   flex-wrap: wrap;
 }
 
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(255, 255, 255, 0.8);
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-toggle-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.nav-toggle-text {
+  font-size: 0.9rem;
+}
+
 .user-email {
   font-size: 0.9rem;
   color: var(--muted);
@@ -1885,6 +1915,44 @@ select {
   color: var(--admin-muted);
 }
 
+.admin-topbar-title {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.admin-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  cursor: pointer;
+}
+
+.admin-nav-toggle:hover {
+  background: var(--admin-surface-muted);
+}
+
+.admin-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 55;
+}
+
+.admin-nav-open .admin-sidebar-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .admin-topbar-actions {
   display: flex;
   align-items: center;
@@ -2444,10 +2512,10 @@ select {
   }
 }
 
-@media (max-width: 900px) {
-  .admin-body {
-    overflow: auto;
-  }
+  @media (max-width: 900px) {
+    .admin-body {
+      overflow: auto;
+    }
 
   .admin-shell {
     flex-direction: column;
@@ -2483,14 +2551,248 @@ select {
     padding: 1.5rem;
   }
 
-  .admin-card--row {
-    flex-direction: column;
-    align-items: flex-start;
+    .admin-card--row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
-}
 
-/* Dark theme */
-body.theme-dark {
+  /* Responsive refinements */
+  @media (max-width: 1024px) {
+    .page {
+      padding: 1.75rem 1rem 3rem;
+    }
+
+    .hero {
+      border-radius: 24px;
+    }
+
+    .admin-main-content {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .site-header {
+      top: 0.75rem;
+    }
+
+    .site-nav {
+      padding: 0.75rem 1rem;
+      gap: 0.75rem;
+      justify-content: space-between;
+    }
+
+    .nav-toggle {
+      display: inline-flex;
+    }
+
+    .nav-menu {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(226, 232, 240, 0.7);
+    }
+
+    .site-nav.is-open .nav-menu {
+      display: flex;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .nav-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .nav-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .user-email {
+      align-self: flex-start;
+    }
+
+    .destinations-head,
+    .panel-head,
+    .experience-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .notice-header {
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .admin-shell {
+      height: 100%;
+    }
+
+    .admin-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: min(82vw, 280px);
+      transform: translateX(-105%);
+      transition: transform 0.25s ease;
+      z-index: 60;
+    }
+
+    .admin-nav-open .admin-sidebar {
+      transform: translateX(0);
+    }
+
+    .admin-nav-toggle {
+      display: inline-flex;
+    }
+
+    .admin-topbar {
+      position: sticky;
+      top: 0;
+      padding: 0.75rem 1.25rem;
+    }
+
+    .admin-topbar-actions {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .admin-search {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      min-height: 320px;
+    }
+
+    .hero-overlay {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.7) 55%, rgba(255, 255, 255, 0.15) 100%);
+    }
+
+    .hero-content {
+      padding: 2rem 1.75rem;
+      max-width: none;
+    }
+
+    .hero-actions .btn,
+    .experience-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .content-grid {
+      gap: 1.5rem;
+    }
+
+    .card {
+      padding: 1.5rem;
+    }
+
+    .requirements-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .requirements-form .btn {
+      width: 100%;
+    }
+
+    .requirements-content {
+      padding: 1.5rem;
+    }
+
+    .requirement-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .community-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .footer-links {
+      flex-wrap: wrap;
+    }
+
+    .admin-main-content {
+      padding: 1.1rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .page {
+      padding: 1.25rem 0.75rem 2.5rem;
+    }
+
+    .site-header {
+      top: 0.5rem;
+      padding: 0 0.75rem;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+    }
+
+    .brand {
+      font-size: 1rem;
+    }
+
+    .nav-toggle {
+      padding: 0.4rem 0.7rem;
+    }
+
+    .nav-toggle-text {
+      display: none;
+    }
+
+    .hero-content {
+      padding: 1.75rem 1.5rem;
+    }
+
+    .notice-item {
+      padding: 0.85rem;
+    }
+
+    .flag-track {
+      padding: 1rem 1.25rem;
+    }
+
+    .flag-nav {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
+
+    .site-theme-toggle {
+      left: 1rem;
+      bottom: 1rem;
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  /* Dark theme */
+  body.theme-dark {
   color-scheme: dark;
   --background: #0f172a;
   --text: #f8fafc;
@@ -2506,6 +2808,16 @@ body.theme-dark {
 body.theme-dark .site-nav {
   background: rgba(15, 23, 42, 0.85);
   border-color: rgba(51, 65, 85, 0.8);
+}
+
+body.theme-dark .nav-toggle {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #e2e8f0;
+}
+
+body.theme-dark .nav-menu {
+  border-top-color: rgba(51, 65, 85, 0.8);
 }
 
 body.theme-dark .brand-name {

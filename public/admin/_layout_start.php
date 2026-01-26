@@ -25,7 +25,7 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
 <body class="admin-body">
 <canvas class="admin-particles" id="admin-particles" aria-hidden="true"></canvas>
 <div class="admin-shell">
-  <aside class="admin-sidebar">
+  <aside class="admin-sidebar" id="admin-sidebar">
     <div class="admin-sidebar-header">
       <div class="admin-brand">
         <img class="admin-logo" src="<?= e(asset_url('assets/img/logo.webp')) ?>" alt="<?= e(config('app.app_name')) ?>">
@@ -86,12 +86,18 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
       </a>
     </div>
   </aside>
+  <div class="admin-sidebar-overlay" data-admin-overlay></div>
 
   <div class="admin-main">
     <header class="admin-topbar">
-      <div>
-        <h1><?= e($page_title) ?></h1>
-        <p><?= e($page_subtitle) ?></p>
+      <div class="admin-topbar-title">
+        <button class="admin-nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="admin-sidebar">
+          <span class="material-icons-round">menu</span>
+        </button>
+        <div>
+          <h1><?= e($page_title) ?></h1>
+          <p><?= e($page_subtitle) ?></p>
+        </div>
       </div>
       <div class="admin-topbar-actions">
         <label class="admin-search">

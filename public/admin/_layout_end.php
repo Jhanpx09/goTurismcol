@@ -12,6 +12,39 @@
 <script>
   (function () {
     var body = document.body;
+    var toggle = document.querySelector('.admin-nav-toggle');
+    var overlay = document.querySelector('[data-admin-overlay]');
+    if (!toggle) return;
+
+    function setOpen(open) {
+      body.classList.toggle('admin-nav-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!body.classList.contains('admin-nav-open'));
+    });
+
+    if (overlay) {
+      overlay.addEventListener('click', function () {
+        setOpen(false);
+      });
+    }
+
+    document.querySelectorAll('.admin-nav-link').forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (window.innerWidth <= 900) setOpen(false);
+      });
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900) setOpen(false);
+    });
+  })();
+</script>
+<script>
+  (function () {
+    var body = document.body;
     var toggle = document.getElementById('admin-theme-toggle');
     if (!toggle) return;
     var stored = localStorage.getItem('admin-theme');
