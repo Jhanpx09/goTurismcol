@@ -102,7 +102,13 @@ $destinos_destacados = $pdo->query("
         </div>
         <form class="requirements-form" method="get" action="<?= e(base_url('requisitos.php')) ?>">
           <div class="select-wrap">
-
+            <select class="form-select select-native" name="destino" id="destino-select" required>
+              <option value="" disabled selected>Seleccione un destino</option>
+              <?php foreach ($destinos as $d): ?>
+                <option value="<?= (int)$d['id_destino'] ?>">
+                  <?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?>
+                </option>
+              <?php endforeach; ?>
             </select>
             <div class="flag-search flag-search--inline" id="destino-search">
               <div class="flag-search__wrapper">
@@ -436,6 +442,10 @@ $destinos_destacados = $pdo->query("
         if (select) select.value = value;
         setActive(option);
         closeList();
+        if (select && select.value) {
+          var form = search.closest('form');
+          if (form) form.submit();
+        }
       });
     });
 
@@ -457,6 +467,7 @@ $destinos_destacados = $pdo->query("
     var ctaEl = slider.querySelector('.hero-cta');
     var currentIndex = 0;
     var typingTimer = null;
+    var typingDoneTimer = null;
     var timer = null;
     var defaultSeconds = 7;
     var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -467,9 +478,15 @@ $destinos_destacados = $pdo->query("
         clearTimeout(typingTimer);
         typingTimer = null;
       }
+      if (typingDoneTimer) {
+        clearTimeout(typingDoneTimer);
+        typingDoneTimer = null;
+      }
       titleText.textContent = '';
+      slider.classList.add('is-typing');
       if (prefersReduced) {
         titleText.textContent = text;
+        slider.classList.remove('is-typing');
         return;
       }
       var idx = 0;
@@ -478,6 +495,10 @@ $destinos_destacados = $pdo->query("
         idx += 1;
         if (idx <= text.length) {
           typingTimer = window.setTimeout(step, 40);
+        } else {
+          typingDoneTimer = window.setTimeout(function () {
+            slider.classList.remove('is-typing');
+          }, 500);
         }
       }
       step();
@@ -528,4 +549,3 @@ $destinos_destacados = $pdo->query("
 </script>
 </body>
 </html>
-

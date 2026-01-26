@@ -335,6 +335,16 @@ html.is-loading body .page-loading {
   gap: 0.35rem;
 }
 
+.hero-title-caret {
+  opacity: 0;
+  animation: none;
+}
+
+.hero.is-typing .hero-title-caret {
+  opacity: 1;
+  animation: hero-blink 0.9s step-end infinite;
+}
+
 
 .hero h1 {
   font-size: clamp(2.2rem, 3vw, 3rem);
@@ -364,6 +374,10 @@ html.is-loading body .page-loading {
   .hero-slide {
     transition: none;
     transform: none;
+  }
+
+  .hero-title-caret {
+    animation: none;
   }
 
 }

@@ -1,5 +1,5 @@
 <?php require_once __DIR__ . '/_admin_guard.php';
-$destinos = $pdo->query("SELECT id_destino, pais, ciudad FROM destino ORDER BY pais, ciudad")->fetchAll();
+$destinos = $pdo->query("SELECT id_destino, pais, ciudad, bandera_path FROM destino ORDER BY pais, ciudad")->fetchAll();
 $destino_id = isset($_GET['destino']) ? (int)$_GET['destino'] : 0;
 $errors = [];
 function requisito_tipo_label(string $tipo): string {
@@ -151,19 +151,50 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
   <div class="admin-page">
   <?php if ($errors): ?><div class="alert alert-danger"><ul class="mb-0"><?php foreach ($errors as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
 
-  <form class="row g-2 mb-4" method="get">
-    <div class="col-md-8">
-      <select class="form-select" name="destino" required>
-        <option value="" disabled <?= $destino_id ? '' : 'selected' ?>>Seleccione un destino</option>
-        <?php foreach ($destinos as $d): ?>
-          <option value="<?= (int)$d['id_destino'] ?>" <?= $destino_id===(int)$d['id_destino']?'selected':'' ?>>
-            <?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
+  <div class="mb-4">
+    <div class="flag-search flag-search--inline" id="admin-flag-search">
+      <div class="flag-search__wrapper">
+        <span class="material-icons-round flag-search__icon" aria-hidden="true">search</span>
+        <input
+          class="flag-search__input"
+          type="text"
+          id="admin-flag-search-input"
+          placeholder="Buscar destino..."
+          autocomplete="off"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="admin-flag-search-list"
+        >
+        <div class="flag-search__list" id="admin-flag-search-list" role="listbox">
+          <?php foreach ($destinos as $d): ?>
+            <?php $is_active = $destino_id === (int)$d['id_destino']; ?>
+            <button
+              class="flag-search__option <?= $is_active ? 'is-active' : '' ?>"
+              type="button"
+              data-destino="<?= (int)$d['id_destino'] ?>"
+              data-label="<?= e($d['pais'] . ' ' . ($d['ciudad'] ?? '')) ?>"
+              data-url="<?= e(base_url('admin/requisitos.php?destino=' . (int)$d['id_destino'])) ?>"
+            >
+              <span class="flag-sphere flag-sphere--xs">
+                <?php if (!empty($d['bandera_path'])): ?>
+                  <img src="<?= e(asset_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
+                <?php else: ?>
+                  <span class="flag-fallback"><?= e(substr($d['pais'], 0, 1)) ?></span>
+                <?php endif; ?>
+              </span>
+              <span class="flag-search__label">
+                <span class="flag-search__country"><?= e($d['pais']) ?></span>
+                <?php if (!empty($d['ciudad'])): ?>
+                  <span class="flag-search__city"><?= e($d['ciudad']) ?></span>
+                <?php endif; ?>
+              </span>
+            </button>
+          <?php endforeach; ?>
+          <div class="flag-search__empty">Sin resultados</div>
+        </div>
+      </div>
     </div>
-    <div class="col-md-4 d-grid"><button class="btn btn-outline-secondary">Cargar</button></div>
-  </form>
+  </div>
 
   <?php if ($destino_id): ?>
     <?php if (!empty($_GET['created'])): ?>
@@ -341,4 +372,88 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
     <p class="text-secondary">Seleccione un destino para gestionar sus requisitos.</p>
   <?php endif; ?>
   </div>
+  <script>
+    (function () {
+      var search = document.getElementById('admin-flag-search');
+      if (!search) return;
+
+      var input = search.querySelector('.flag-search__input');
+      var list = search.querySelector('.flag-search__list');
+      var options = Array.prototype.slice.call(search.querySelectorAll('.flag-search__option'));
+      var empty = search.querySelector('.flag-search__empty');
+
+      function openList() {
+        search.classList.add('is-open');
+        if (input) input.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeList() {
+        search.classList.remove('is-open');
+        if (input) input.setAttribute('aria-expanded', 'false');
+      }
+
+      function filterOptions(query) {
+        var term = (query || '').toLowerCase().trim();
+        var matches = 0;
+        options.forEach(function (option) {
+          var label = option.getAttribute('data-label') || option.textContent || '';
+          var isMatch = !term || label.toLowerCase().indexOf(term) !== -1;
+          option.classList.toggle('is-hidden', !isMatch);
+          if (isMatch) matches += 1;
+        });
+        if (empty) empty.style.display = matches ? 'none' : 'block';
+      }
+
+      function focusFirstVisible() {
+        for (var i = 0; i < options.length; i += 1) {
+          if (!options[i].classList.contains('is-hidden')) {
+            options[i].focus();
+            return;
+          }
+        }
+      }
+
+      if (input) {
+        input.addEventListener('focus', function () {
+          openList();
+          filterOptions(input.value);
+        });
+
+        input.addEventListener('click', function () {
+          openList();
+          filterOptions(input.value);
+        });
+
+        input.addEventListener('input', function () {
+          openList();
+          filterOptions(input.value);
+        });
+
+        input.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') {
+            closeList();
+            input.blur();
+          }
+
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            focusFirstVisible();
+          }
+        });
+      }
+
+      options.forEach(function (option) {
+        option.addEventListener('click', function () {
+          var url = option.getAttribute('data-url');
+          if (url) window.location.href = url;
+        });
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!search.contains(event.target)) closeList();
+      });
+
+      filterOptions('');
+    })();
+  </script>
 <?php include __DIR__ . '/_layout_end.php'; ?>
