@@ -99,7 +99,17 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
           <p><?= e($page_subtitle) ?></p>
         </div>
       </div>
-      <div class="admin-topbar-actions">
+      <button
+        class="admin-topbar-toggle"
+        type="button"
+        data-admin-topbar-toggle
+        aria-label="Mostrar opciones"
+        aria-expanded="false"
+      >
+        <span class="material-icons-round icon-open">expand_more</span>
+        <span class="material-icons-round icon-close">expand_less</span>
+      </button>
+      <div class="admin-topbar-actions" data-admin-topbar-actions>
         <label class="admin-search">
           <span class="material-icons-round">search</span>
           <input type="text" placeholder="Buscar..." aria-label="Buscar">

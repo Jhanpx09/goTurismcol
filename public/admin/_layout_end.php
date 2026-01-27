@@ -45,6 +45,37 @@
 <script>
   (function () {
     var body = document.body;
+    var toggle = document.querySelector('[data-admin-topbar-toggle]');
+    var actions = document.querySelector('[data-admin-topbar-actions]');
+    if (!toggle || !actions) return;
+    var storageKey = 'admin-topbar-open';
+
+    function setOpen(open, persist) {
+      var isDesktop = window.innerWidth > 900;
+      var nextOpen = isDesktop ? true : open;
+      body.classList.toggle('admin-topbar-open', nextOpen);
+      toggle.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      toggle.setAttribute('aria-label', nextOpen ? 'Ocultar opciones' : 'Mostrar opciones');
+      if (persist && !isDesktop) {
+        localStorage.setItem(storageKey, nextOpen ? 'open' : 'closed');
+      }
+    }
+
+    var stored = localStorage.getItem(storageKey);
+    setOpen(stored === 'open', false);
+
+    toggle.addEventListener('click', function () {
+      setOpen(!body.classList.contains('admin-topbar-open'), true);
+    });
+
+    window.addEventListener('resize', function () {
+      setOpen(localStorage.getItem(storageKey) === 'open', false);
+    });
+  })();
+</script>
+<script>
+  (function () {
+    var body = document.body;
     var toggle = document.getElementById('admin-theme-toggle');
     if (!toggle) return;
     var stored = localStorage.getItem('admin-theme');

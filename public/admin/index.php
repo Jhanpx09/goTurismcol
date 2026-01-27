@@ -169,11 +169,23 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
 
   <div class="admin-main">
     <header class="admin-topbar">
-      <div>
-        <h1>Panel administrativo</h1>
-        <p>Bienvenido de nuevo, <?= e($admin_name) ?></p>
+      <div class="admin-topbar-title">
+        <div>
+          <h1>Panel administrativo</h1>
+          <p>Bienvenido de nuevo, <?= e($admin_name) ?></p>
+        </div>
       </div>
-      <div class="admin-topbar-actions">
+      <button
+        class="admin-topbar-toggle"
+        type="button"
+        data-admin-topbar-toggle
+        aria-label="Mostrar opciones"
+        aria-expanded="false"
+      >
+        <span class="material-icons-round icon-open">expand_more</span>
+        <span class="material-icons-round icon-close">expand_less</span>
+      </button>
+      <div class="admin-topbar-actions" data-admin-topbar-actions>
         <label class="admin-search">
           <span class="material-icons-round">search</span>
           <input type="text" placeholder="Buscar..." aria-label="Buscar">
@@ -339,6 +351,37 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
   <span class="material-icons-round icon-light">light_mode</span>
 </button>
 
+<script>
+  (function () {
+    var body = document.body;
+    var toggle = document.querySelector('[data-admin-topbar-toggle]');
+    var actions = document.querySelector('[data-admin-topbar-actions]');
+    if (!toggle || !actions) return;
+    var storageKey = 'admin-topbar-open';
+
+    function setOpen(open, persist) {
+      var isDesktop = window.innerWidth > 900;
+      var nextOpen = isDesktop ? true : open;
+      body.classList.toggle('admin-topbar-open', nextOpen);
+      toggle.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      toggle.setAttribute('aria-label', nextOpen ? 'Ocultar opciones' : 'Mostrar opciones');
+      if (persist && !isDesktop) {
+        localStorage.setItem(storageKey, nextOpen ? 'open' : 'closed');
+      }
+    }
+
+    var stored = localStorage.getItem(storageKey);
+    setOpen(stored === 'open', false);
+
+    toggle.addEventListener('click', function () {
+      setOpen(!body.classList.contains('admin-topbar-open'), true);
+    });
+
+    window.addEventListener('resize', function () {
+      setOpen(localStorage.getItem(storageKey) === 'open', false);
+    });
+  })();
+</script>
 <script>
   (function () {
     var body = document.body;

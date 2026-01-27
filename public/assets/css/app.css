@@ -1921,6 +1921,35 @@ select {
   gap: 0.9rem;
 }
 
+.admin-topbar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  cursor: pointer;
+}
+
+.admin-topbar-toggle:hover {
+  background: var(--admin-surface-muted);
+}
+
+.admin-topbar-toggle .icon-close {
+  display: none;
+}
+
+.admin-topbar-open .admin-topbar-toggle .icon-open {
+  display: none;
+}
+
+.admin-topbar-open .admin-topbar-toggle .icon-close {
+  display: inline-block;
+}
+
 .admin-nav-toggle {
   display: none;
   align-items: center;
@@ -2555,6 +2584,10 @@ select {
       flex-direction: column;
       align-items: flex-start;
     }
+
+  .admin-theme-toggle {
+    display: none;
+  }
   }
 
   /* Responsive refinements */
@@ -2661,11 +2694,26 @@ select {
       position: sticky;
       top: 0;
       padding: 0.75rem 1.25rem;
+      flex-wrap: wrap;
+      row-gap: 0.6rem;
+    }
+
+    .admin-topbar-title {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .admin-topbar-toggle {
+      display: inline-flex;
     }
 
     .admin-topbar-actions {
       width: 100%;
       flex-wrap: wrap;
+    }
+
+    .admin-body:not(.admin-topbar-open) .admin-topbar-actions {
+      display: none;
     }
 
     .admin-search {
