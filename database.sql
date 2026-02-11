@@ -4,6 +4,11 @@ USE umb_viajes;
 CREATE TABLE IF NOT EXISTS usuario (
   id_usuario INT AUTO_INCREMENT PRIMARY KEY,
   correo VARCHAR(190) NOT NULL UNIQUE,
+  nombre VARCHAR(120) NULL,
+  apellido VARCHAR(120) NULL,
+  telefono VARCHAR(40) NULL,
+  id_destino INT NULL,
+  foto_path VARCHAR(255) NULL,
   contrasena_hash VARCHAR(255) NOT NULL,
   fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo'
@@ -32,6 +37,13 @@ CREATE TABLE IF NOT EXISTS destino (
   estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo'
 ) ENGINE=InnoDB;
 
+-- Si la tabla usuario ya existe, ejecutar una vez:
+-- ALTER TABLE usuario ADD COLUMN nombre VARCHAR(120) NULL;
+-- ALTER TABLE usuario ADD COLUMN apellido VARCHAR(120) NULL;
+-- ALTER TABLE usuario ADD COLUMN telefono VARCHAR(40) NULL;
+-- ALTER TABLE usuario ADD COLUMN id_destino INT NULL;
+-- ALTER TABLE usuario ADD COLUMN foto_path VARCHAR(255) NULL;
+
 CREATE TABLE IF NOT EXISTS destino_destacado (
   id_destacado INT AUTO_INCREMENT PRIMARY KEY,
   id_destino INT NOT NULL,
@@ -43,12 +55,29 @@ CREATE TABLE IF NOT EXISTS destino_destacado (
   CONSTRAINT fk_dest_destacado FOREIGN KEY (id_destino) REFERENCES destino(id_destino) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS hero_slide (
+  id_slide INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(180) NOT NULL,
+  descripcion TEXT NOT NULL,
+  enlace_texto VARCHAR(120) NOT NULL,
+  enlace_url VARCHAR(255) NOT NULL,
+  imagen_path VARCHAR(255) NOT NULL,
+  orden INT NOT NULL DEFAULT 0,
+  intervalo_segundos INT NOT NULL DEFAULT 7,
+  estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+  fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Si la tabla hero_slide ya existe, ejecutar una vez:
+-- ALTER TABLE hero_slide ADD COLUMN intervalo_segundos INT NOT NULL DEFAULT 7;
+
 CREATE TABLE IF NOT EXISTS requisito_viaje (
   id_requisito INT AUTO_INCREMENT PRIMARY KEY,
   id_destino INT NOT NULL,
   titulo_requisito VARCHAR(180) NOT NULL,
   descripcion_requisito TEXT NOT NULL,
   tipo_requisito VARCHAR(80) NOT NULL,
+  icono VARCHAR(60) NULL,
   fuente_oficial TEXT NULL,
   fecha_ultima_actualizacion DATE NOT NULL,
   creado_por INT NOT NULL,
@@ -56,6 +85,9 @@ CREATE TABLE IF NOT EXISTS requisito_viaje (
   CONSTRAINT fk_req_destino FOREIGN KEY (id_destino) REFERENCES destino(id_destino) ON DELETE CASCADE,
   CONSTRAINT fk_req_creador FOREIGN KEY (creado_por) REFERENCES usuario(id_usuario) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
+
+-- Si la tabla requisito_viaje ya existe, ejecutar una vez:
+-- ALTER TABLE requisito_viaje ADD COLUMN icono VARCHAR(60) NULL;
 
 CREATE TABLE IF NOT EXISTS actualizacion_requisito (
   id_actualizacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -120,3 +152,7 @@ INSERT IGNORE INTO destino (id_destino, pais, ciudad, descripcion_general, estad
 INSERT IGNORE INTO requisito_viaje (id_requisito, id_destino, titulo_requisito, descripcion_requisito, tipo_requisito, fuente_oficial, fecha_ultima_actualizacion, creado_por, estado)
 VALUES
   (1,2,'Pasaporte vigente','El viajero debe contar con pasaporte vigente durante el ingreso y permanencia según el caso.','documental','Fuente oficial recomendada: sitios gubernamentales del país destino.','2025-01-01',1,'vigente');
+
+
+INSERT INTO `destino` (`id_destino`, `pais`, `ciudad`, `descripcion_general`, `estado`, `bandera_path`) 
+VALUES (NULL, 'Andorra', NULL, NULL, 'activo', 'assets/flags/ad.png') 

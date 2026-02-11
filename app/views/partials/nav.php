@@ -8,29 +8,100 @@ function nav_active(string $file, string $current): string {
 }
 ?>
 <header class="site-header">
-  <nav class="site-nav">
+  <nav class="site-nav" id="site-nav">
     <a class="brand" href="<?= e(base_url('index.php')) ?>">
       <img class="brand-logo" src="<?= e(asset_url('assets/img/logo.webp')) ?>" alt="goTurismCol">
       <span class="brand-name">go<span class="brand-accent">Turism</span><span class="brand-accent-secondary">Col</span></span>
     </a>
 
-    <div class="nav-links">
-      <a class="<?= nav_active('requisitos.php', $current) ?>" href="<?= e(base_url('requisitos.php')) ?>" <?= $current === 'requisitos.php' ? 'aria-current="page"' : '' ?>>Requisitos</a>
-      <a class="<?= nav_active('experiencias.php', $current) ?>" href="<?= e(base_url('experiencias.php')) ?>" <?= $current === 'experiencias.php' ? 'aria-current="page"' : '' ?>>Experiencias</a>
-      <a class="<?= nav_active('index.php', $current) ?>" href="<?= e(base_url('index.php')) ?>#destinos" <?= $current === 'index.php' ? 'aria-current="page"' : '' ?>>Menu</a>
-    </div>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu">
+      <span class="nav-toggle-icon" aria-hidden="true">☰</span>
+      <span class="nav-toggle-text">Menu</span>
+    </button>
 
-    <div class="nav-actions">
-      <?php if ($u): ?>
-        <?php if (has_role('Administrador')): ?>
-          <a class="btn btn-secondary" href="<?= e(base_url('admin/index.php')) ?>">Panel admin</a>
+    <div class="nav-menu" id="site-nav-menu">
+      <div class="nav-links">
+        <a id="nav-home" class="<?= nav_active('index.php', $current) ?>" href="<?= e(base_url('index.php')) ?>" <?= $current === 'index.php' ? 'aria-current="page"' : '' ?>>Inicio</a>
+        <a class="<?= nav_active('requisitos.php', $current) ?>" href="<?= e(base_url('requisitos.php')) ?>" <?= $current === 'requisitos.php' ? 'aria-current="page"' : '' ?>>Requisitos</a>
+        <a class="<?= nav_active('experiencias.php', $current) ?>" href="<?= e(base_url('experiencias.php')) ?>" <?= $current === 'experiencias.php' ? 'aria-current="page"' : '' ?>>Experiencias</a>
+        <a id="nav-destinos" href="<?= e(base_url('index.php')) ?>#destinos">Destinos</a>
+      </div>
+
+      <div class="nav-actions">
+        <?php if ($u): ?>
+          <?php if (has_role('Administrador')): ?>
+            <a class="btn btn-secondary" href="<?= e(base_url('admin/index.php')) ?>">Panel admin</a>
+          <?php endif; ?>
+          <span class="user-email <?= has_role('Administrador') ? 'is-admin' : '' ?>"><?= e($u['correo']) ?></span>
+          <a class="btn btn-outline btn-outline-danger" href="<?= e(base_url('logout.php')) ?>">Salir</a>
+        <?php else: ?>
+          <a class="btn btn-ghost" href="<?= e(base_url('login.php')) ?>">Iniciar sesión</a>
+          <a class="btn btn-secondary" href="<?= e(base_url('register.php')) ?>">Registrarse</a>
         <?php endif; ?>
-        <span class="user-email <?= has_role('Administrador') ? 'is-admin' : '' ?>"><?= e($u['correo']) ?></span>
-        <a class="btn btn-outline btn-outline-danger" href="<?= e(base_url('logout.php')) ?>">Salir</a>
-      <?php else: ?>
-        <a class="btn btn-ghost" href="<?= e(base_url('login.php')) ?>">Iniciar sesión</a>
-        <a class="btn btn-secondary" href="<?= e(base_url('register.php')) ?>">Registrarse</a>
-      <?php endif; ?>
+      </div>
     </div>
   </nav>
 </header>
+<script>
+  (function () {
+    var homeLink = document.getElementById('nav-home');
+    var destinosLink = document.getElementById('nav-destinos');
+    if (!homeLink || !destinosLink) return;
+
+    var homeUrl = new URL(homeLink.getAttribute('href'), window.location.origin);
+
+    function setActive(link, isActive) {
+      if (!link) return;
+      link.classList.toggle('is-active', isActive);
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    }
+
+    function syncNavState() {
+      var isHomePath = window.location.pathname === homeUrl.pathname;
+      var isDestinos = isHomePath && window.location.hash === '#destinos';
+      setActive(destinosLink, isDestinos);
+      setActive(homeLink, isHomePath && !isDestinos);
+    }
+
+    syncNavState();
+    window.addEventListener('hashchange', syncNavState);
+  })();
+</script>
+<script>
+  (function () {
+    var nav = document.getElementById('site-nav');
+    if (!nav) return;
+    var toggle = nav.querySelector('.nav-toggle');
+    var menu = nav.querySelector('.nav-menu');
+    if (!toggle || !menu) return;
+
+    function setOpen(open) {
+      nav.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      window.requestAnimationFrame(function () {
+        var header = document.querySelector('.site-header');
+        if (header) {
+          document.body.style.setProperty('--site-header-height', header.offsetHeight + 'px');
+        }
+      });
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!nav.classList.contains('is-open'));
+    });
+
+    nav.querySelectorAll('.nav-links a, .nav-actions a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (window.innerWidth <= 900) setOpen(false);
+      });
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900) setOpen(false);
+    });
+  })();
+</script>

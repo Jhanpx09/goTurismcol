@@ -23,8 +23,9 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
   <link href="<?= e(asset_url('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body class="admin-body">
+<canvas class="admin-particles" id="admin-particles" aria-hidden="true"></canvas>
 <div class="admin-shell">
-  <aside class="admin-sidebar">
+  <aside class="admin-sidebar" id="admin-sidebar">
     <div class="admin-sidebar-header">
       <div class="admin-brand">
         <img class="admin-logo" src="<?= e(asset_url('assets/img/logo.webp')) ?>" alt="<?= e(config('app.app_name')) ?>">
@@ -46,6 +47,10 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
           <span class="material-icons-round">stars</span>
           Destinos destacados
         </a>
+        <a class="admin-nav-link <?= admin_nav_active('hero_slider.php', $current) ?>" href="<?= e(base_url('admin/hero_slider.php')) ?>">
+          <span class="material-icons-round">slideshow</span>
+          Slider portada
+        </a>
       </div>
       <div class="admin-nav-section">
         <p class="admin-nav-title">Gestion</p>
@@ -59,6 +64,10 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
           <?php if ($pending_experiencias > 0): ?>
             <span class="admin-nav-badge"><?= (int)$pending_experiencias ?></span>
           <?php endif; ?>
+        </a>
+        <a class="admin-nav-link <?= admin_nav_active('usuarios.php', $current) ?>" href="<?= e(base_url('admin/usuarios.php')) ?>">
+          <span class="material-icons-round">group</span>
+          Usuarios y roles
         </a>
         <a class="admin-nav-link <?= admin_nav_active('avisos.php', $current) ?>" href="<?= e(base_url('admin/avisos.php')) ?>">
           <span class="material-icons-round">campaign</span>
@@ -77,14 +86,30 @@ $pending_experiencias = $pending_experiencias ?? (int)$pdo->query("SELECT COUNT(
       </a>
     </div>
   </aside>
+  <div class="admin-sidebar-overlay" data-admin-overlay></div>
 
   <div class="admin-main">
     <header class="admin-topbar">
-      <div>
-        <h1><?= e($page_title) ?></h1>
-        <p><?= e($page_subtitle) ?></p>
+      <div class="admin-topbar-title">
+        <button class="admin-nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="admin-sidebar">
+          <span class="material-icons-round">menu</span>
+        </button>
+        <div>
+          <h1><?= e($page_title) ?></h1>
+          <p><?= e($page_subtitle) ?></p>
+        </div>
       </div>
-      <div class="admin-topbar-actions">
+      <button
+        class="admin-topbar-toggle"
+        type="button"
+        data-admin-topbar-toggle
+        aria-label="Mostrar opciones"
+        aria-expanded="false"
+      >
+        <span class="material-icons-round icon-open">expand_more</span>
+        <span class="material-icons-round icon-close">expand_less</span>
+      </button>
+      <div class="admin-topbar-actions" data-admin-topbar-actions>
         <label class="admin-search">
           <span class="material-icons-round">search</span>
           <input type="text" placeholder="Buscar..." aria-label="Buscar">

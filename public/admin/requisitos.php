@@ -1,5 +1,5 @@
 <?php require_once __DIR__ . '/_admin_guard.php';
-$destinos = $pdo->query("SELECT id_destino, pais, ciudad FROM destino ORDER BY pais, ciudad")->fetchAll();
+$destinos = $pdo->query("SELECT id_destino, pais, ciudad, bandera_path FROM destino ORDER BY pais, ciudad")->fetchAll();
 $destino_id = isset($_GET['destino']) ? (int)$_GET['destino'] : 0;
 $errors = [];
 function requisito_tipo_label(string $tipo): string {
@@ -13,6 +13,19 @@ function requisito_tipo_label(string $tipo): string {
   return $map[$key] ?? ucfirst($tipo);
 }
 
+$requisito_iconos = [
+  'fiber_manual_record' => 'Vineta',
+  'warning' => 'Advertencia',
+  'check_circle' => 'Check',
+  'assignment_ind' => 'Pasaporte',
+];
+$requisito_icono_default = 'check_circle';
+
+function requisito_icono_normalize(?string $icono, array $permitidos, string $fallback): string {
+  $icono = trim((string)$icono);
+  return ($icono && isset($permitidos[$icono])) ? $icono : $fallback;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   csrf_check();
   $action = $_POST['action'] ?? '';
@@ -22,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
     $tipo = trim($_POST['tipo'] ?? '');
     $desc = trim($_POST['descripcion'] ?? '');
+    $icono = requisito_icono_normalize($_POST['icono'] ?? '', $requisito_iconos, $requisito_icono_default);
     $fuente = trim($_POST['fuente'] ?? '');
     $fecha = trim($_POST['fecha'] ?? '');
 
@@ -34,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
       $stmt = $pdo->prepare("
-        INSERT INTO requisito_viaje (id_destino, titulo_requisito, descripcion_requisito, tipo_requisito, fuente_oficial, fecha_ultima_actualizacion, creado_por)
-        VALUES (?,?,?,?,?,?,?)
+        INSERT INTO requisito_viaje (id_destino, titulo_requisito, descripcion_requisito, tipo_requisito, icono, fuente_oficial, fecha_ultima_actualizacion, creado_por)
+        VALUES (?,?,?,?,?,?,?,?)
       ");
-      $stmt->execute([$id_destino, $titulo, $desc, $tipo, $fuente ?: null, $fecha, (int)$admin['id_usuario']]);
+      $stmt->execute([$id_destino, $titulo, $desc, $tipo, $icono, $fuente ?: null, $fecha, (int)$admin['id_usuario']]);
       if ($stmt->rowCount() > 0) {
         redirect('admin/requisitos.php?destino=' . $id_destino . '&created=1');
       } else {
@@ -63,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
     $tipo = trim($_POST['tipo'] ?? '');
     $desc = trim($_POST['descripcion'] ?? '');
+    $icono = requisito_icono_normalize($_POST['icono'] ?? '', $requisito_iconos, $requisito_icono_default);
     $fuente = trim($_POST['fuente'] ?? '');
     $fecha = $_POST['fecha'] ?? date('Y-m-d');
     $texto = trim($_POST['cambio'] ?? '');
@@ -75,9 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$errors) {
       $pdo->prepare("
         UPDATE requisito_viaje
-        SET titulo_requisito=?, descripcion_requisito=?, tipo_requisito=?, fuente_oficial=?, fecha_ultima_actualizacion=?
+        SET titulo_requisito=?, descripcion_requisito=?, tipo_requisito=?, icono=?, fuente_oficial=?, fecha_ultima_actualizacion=?
         WHERE id_requisito=?
-      ")->execute([$titulo, $desc, $tipo, $fuente ?: null, $fecha, $id]);
+      ")->execute([$titulo, $desc, $tipo, $icono, $fuente ?: null, $fecha, $id]);
       $pdo->prepare("INSERT INTO actualizacion_requisito (id_requisito, descripcion_cambio, actualizado_por) VALUES (?,?,?)")
           ->execute([$id, $texto, (int)$admin['id_usuario']]);
       redirect('admin/requisitos.php?destino=' . (int)($_POST['destino_id'] ?? 0));
@@ -120,6 +135,10 @@ if ($edit_id && $requisitos) {
     }
   }
 }
+$icono_selected_new = $requisito_icono_default;
+$icono_selected_edit = $edit_requisito
+  ? requisito_icono_normalize($edit_requisito['icono'] ?? '', $requisito_iconos, $requisito_icono_default)
+  : $requisito_icono_default;
 $page_title = 'Requisitos';
 $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
 ?>
@@ -132,19 +151,50 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
   <div class="admin-page">
   <?php if ($errors): ?><div class="alert alert-danger"><ul class="mb-0"><?php foreach ($errors as $er): ?><li><?= e($er) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
 
-  <form class="row g-2 mb-4" method="get">
-    <div class="col-md-8">
-      <select class="form-select" name="destino" required>
-        <option value="" disabled <?= $destino_id ? '' : 'selected' ?>>Seleccione un destino</option>
-        <?php foreach ($destinos as $d): ?>
-          <option value="<?= (int)$d['id_destino'] ?>" <?= $destino_id===(int)$d['id_destino']?'selected':'' ?>>
-            <?= e($d['pais'] . ($d['ciudad'] ? ' - ' . $d['ciudad'] : '')) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
+  <div class="mb-4">
+    <div class="flag-search flag-search--inline" id="admin-flag-search">
+      <div class="flag-search__wrapper">
+        <span class="material-icons-round flag-search__icon" aria-hidden="true">search</span>
+        <input
+          class="flag-search__input"
+          type="text"
+          id="admin-flag-search-input"
+          placeholder="Buscar destino..."
+          autocomplete="off"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="admin-flag-search-list"
+        >
+        <div class="flag-search__list" id="admin-flag-search-list" role="listbox">
+          <?php foreach ($destinos as $d): ?>
+            <?php $is_active = $destino_id === (int)$d['id_destino']; ?>
+            <button
+              class="flag-search__option <?= $is_active ? 'is-active' : '' ?>"
+              type="button"
+              data-destino="<?= (int)$d['id_destino'] ?>"
+              data-label="<?= e($d['pais'] . ' ' . ($d['ciudad'] ?? '')) ?>"
+              data-url="<?= e(base_url('admin/requisitos.php?destino=' . (int)$d['id_destino'])) ?>"
+            >
+              <span class="flag-sphere flag-sphere--xs">
+                <?php if (!empty($d['bandera_path'])): ?>
+                  <img src="<?= e(asset_url($d['bandera_path'])) ?>" alt="Bandera de <?= e($d['pais']) ?>">
+                <?php else: ?>
+                  <span class="flag-fallback"><?= e(substr($d['pais'], 0, 1)) ?></span>
+                <?php endif; ?>
+              </span>
+              <span class="flag-search__label">
+                <span class="flag-search__country"><?= e($d['pais']) ?></span>
+                <?php if (!empty($d['ciudad'])): ?>
+                  <span class="flag-search__city"><?= e($d['ciudad']) ?></span>
+                <?php endif; ?>
+              </span>
+            </button>
+          <?php endforeach; ?>
+          <div class="flag-search__empty">Sin resultados</div>
+        </div>
+      </div>
     </div>
-    <div class="col-md-4 d-grid"><button class="btn btn-outline-secondary">Cargar</button></div>
-  </form>
+  </div>
 
   <?php if ($destino_id): ?>
     <?php if (!empty($_GET['created'])): ?>
@@ -178,6 +228,19 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
                 <option value="informacion">Informacion gral.</option>
               </select>
             </div>
+            <div class="col-12">
+              <label class="form-label small text-secondary">Icono</label>
+              <div class="d-flex flex-wrap gap-2">
+                <?php foreach ($requisito_iconos as $icon_value => $icon_label): ?>
+                  <?php $icon_id = 'icono-new-' . $icon_value; ?>
+                  <input class="btn-check" type="radio" name="icono" id="<?= e($icon_id) ?>" value="<?= e($icon_value) ?>" <?= $icon_value === $icono_selected_new ? 'checked' : '' ?>>
+                  <label class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" for="<?= e($icon_id) ?>">
+                    <span class="material-icons-round" aria-hidden="true"><?= e($icon_value) ?></span>
+                    <span><?= e($icon_label) ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
+            </div>
             <div class="col-md-2"><input class="form-control form-control-sm" type="date" name="fecha" value="<?= e(date('Y-m-d')) ?>" required></div>
             <div class="col-md-3"><input class="form-control form-control-sm" name="fuente" placeholder="Fuente oficial" required></div>
             <div class="col-12"><textarea class="form-control form-control-sm" name="descripcion" rows="3" placeholder="Descripcion" required></textarea></div>
@@ -206,6 +269,19 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
                 <option value="recomendado" <?= $edit_requisito['tipo_requisito']==='recomendado'?'selected':'' ?>>Recomendado</option>
                 <option value="informacion" <?= $edit_requisito['tipo_requisito']==='informacion'?'selected':'' ?>>Informacion gral.</option>
               </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label small text-secondary">Icono</label>
+              <div class="d-flex flex-wrap gap-2">
+                <?php foreach ($requisito_iconos as $icon_value => $icon_label): ?>
+                  <?php $icon_id = 'icono-edit-' . $icon_value; ?>
+                  <input class="btn-check" type="radio" name="icono" id="<?= e($icon_id) ?>" value="<?= e($icon_value) ?>" <?= $icon_value === $icono_selected_edit ? 'checked' : '' ?>>
+                  <label class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" for="<?= e($icon_id) ?>">
+                    <span class="material-icons-round" aria-hidden="true"><?= e($icon_value) ?></span>
+                    <span><?= e($icon_label) ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
             </div>
             <div class="col-md-2"><input class="form-control form-control-sm" type="date" name="fecha" value="<?= e($edit_requisito['fecha_ultima_actualizacion']) ?>" required></div>
             <div class="col-md-3"><input class="form-control form-control-sm" name="fuente" value="<?= e($edit_requisito['fuente_oficial']) ?>" placeholder="Fuente oficial (opcional)"></div>
@@ -296,4 +372,88 @@ $page_subtitle = 'Gestiona requisitos de viaje y actualizaciones.';
     <p class="text-secondary">Seleccione un destino para gestionar sus requisitos.</p>
   <?php endif; ?>
   </div>
+  <script>
+    (function () {
+      var search = document.getElementById('admin-flag-search');
+      if (!search) return;
+
+      var input = search.querySelector('.flag-search__input');
+      var list = search.querySelector('.flag-search__list');
+      var options = Array.prototype.slice.call(search.querySelectorAll('.flag-search__option'));
+      var empty = search.querySelector('.flag-search__empty');
+
+      function openList() {
+        search.classList.add('is-open');
+        if (input) input.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeList() {
+        search.classList.remove('is-open');
+        if (input) input.setAttribute('aria-expanded', 'false');
+      }
+
+      function filterOptions(query) {
+        var term = (query || '').toLowerCase().trim();
+        var matches = 0;
+        options.forEach(function (option) {
+          var label = option.getAttribute('data-label') || option.textContent || '';
+          var isMatch = !term || label.toLowerCase().indexOf(term) !== -1;
+          option.classList.toggle('is-hidden', !isMatch);
+          if (isMatch) matches += 1;
+        });
+        if (empty) empty.style.display = matches ? 'none' : 'block';
+      }
+
+      function focusFirstVisible() {
+        for (var i = 0; i < options.length; i += 1) {
+          if (!options[i].classList.contains('is-hidden')) {
+            options[i].focus();
+            return;
+          }
+        }
+      }
+
+      if (input) {
+        input.addEventListener('focus', function () {
+          openList();
+          filterOptions(input.value);
+        });
+
+        input.addEventListener('click', function () {
+          openList();
+          filterOptions(input.value);
+        });
+
+        input.addEventListener('input', function () {
+          openList();
+          filterOptions(input.value);
+        });
+
+        input.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') {
+            closeList();
+            input.blur();
+          }
+
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            focusFirstVisible();
+          }
+        });
+      }
+
+      options.forEach(function (option) {
+        option.addEventListener('click', function () {
+          var url = option.getAttribute('data-url');
+          if (url) window.location.href = url;
+        });
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!search.contains(event.target)) closeList();
+      });
+
+      filterOptions('');
+    })();
+  </script>
 <?php include __DIR__ . '/_layout_end.php'; ?>

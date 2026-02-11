@@ -23,10 +23,10 @@ if (!$destino) {
 }
 
 $stmt = $pdo->prepare("
-  SELECT titulo_requisito, descripcion_requisito, tipo_requisito, fuente_oficial, fecha_ultima_actualizacion
+  SELECT id_requisito, titulo_requisito, descripcion_requisito, tipo_requisito, fuente_oficial, fecha_ultima_actualizacion
   FROM requisito_viaje
   WHERE id_destino=? AND estado='vigente'
-  ORDER BY tipo_requisito, titulo_requisito
+  ORDER BY id_requisito ASC
 ");
 $stmt->execute([$destino_id]);
 $requisitos = $stmt->fetchAll();
@@ -37,6 +37,7 @@ $html .= '<style>
   h1{font-size:24px; margin-bottom:8px;}
   h2{font-size:16px; margin-top:24px;}
   .meta{color:#64748b; font-size:12px; margin-bottom:16px;}
+  .notice{margin:12px 0 20px; padding:10px 12px; border:1px solid #bfdbfe; background:#eff6ff; color:#1d4ed8; border-radius:8px; font-size:12px;}
   .item{margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #e2e8f0;}
   .item h3{margin:0 0 6px; font-size:14px;}
   .item p{margin:0 0 6px; font-size:12px; line-height:1.5;}
@@ -44,6 +45,7 @@ $html .= '<style>
   </style></head><body>';
 $html .= '<h1>Requisitos de viaje</h1>';
 $html .= '<div class="meta">Destino: ' . htmlspecialchars($destino['pais'] . ($destino['ciudad'] ? ' - ' . $destino['ciudad'] : ''), ENT_QUOTES, 'UTF-8') . '</div>';
+$html .= '<div class="notice"><strong>Aviso:</strong> Este portal y todos los requisitos están dirigidos únicamente a ciudadanos colombianos.</div>';
 
 if (!$requisitos) {
   $html .= '<p>No hay requisitos vigentes registrados para este destino.</p>';

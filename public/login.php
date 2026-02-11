@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="col-12 d-grid"><button class="btn btn-primary">Ingresar</button></div>
       </form>
-      <div class="text-secondary small mt-3"><strong>Acceso admin:</strong> admin@umb.local / Admin123!</div>
     </div>
   </div>
 </main>

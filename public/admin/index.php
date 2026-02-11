@@ -21,6 +21,12 @@ try {
 } catch (PDOException $e) {
   $destinos_destacados = 0;
 }
+$hero_slides = 0;
+try {
+  $hero_slides = (int)$pdo->query("SELECT COUNT(*) FROM hero_slide WHERE estado='activo'")->fetchColumn();
+} catch (PDOException $e) {
+  $hero_slides = 0;
+}
 
 $activity = [];
 $latest_req = $pdo->query("
@@ -83,6 +89,8 @@ $admin_name = $admin['correo'] ?? 'Administrador';
 $avatar = strtoupper(substr($admin_name, 0, 2));
 $destacado_status_label = $destinos_destacados > 0 ? 'ACTIVO' : 'SIN CONFIGURAR';
 $destacado_status_class = $destinos_destacados > 0 ? 'admin-status admin-status--success' : 'admin-status admin-status--muted';
+$hero_status_label = $hero_slides > 0 ? 'ACTIVO' : 'SIN CONFIGURAR';
+$hero_status_class = $hero_slides > 0 ? 'admin-status admin-status--success' : 'admin-status admin-status--muted';
 $moderacion_label = $pending_experiencias > 0 ? 'Revisar (' . $pending_experiencias . ')' : 'Sin pendientes';
 $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' : 'admin-btn admin-btn--muted';
 ?>
@@ -119,6 +127,10 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
           <span class="material-icons-round">stars</span>
           Destinos destacados
         </a>
+        <a class="admin-nav-link <?= admin_nav_active('hero_slider.php', $current) ?>" href="<?= e(base_url('admin/hero_slider.php')) ?>">
+          <span class="material-icons-round">slideshow</span>
+          Slider portada
+        </a>
       </div>
       <div class="admin-nav-section">
         <p class="admin-nav-title">Gestion</p>
@@ -132,6 +144,10 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
           <?php if ($pending_experiencias > 0): ?>
             <span class="admin-nav-badge"><?= (int)$pending_experiencias ?></span>
           <?php endif; ?>
+        </a>
+        <a class="admin-nav-link <?= admin_nav_active('usuarios.php', $current) ?>" href="<?= e(base_url('admin/usuarios.php')) ?>">
+          <span class="material-icons-round">group</span>
+          Usuarios y roles
         </a>
         <a class="admin-nav-link <?= admin_nav_active('avisos.php', $current) ?>" href="<?= e(base_url('admin/avisos.php')) ?>">
           <span class="material-icons-round">campaign</span>
@@ -153,11 +169,23 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
 
   <div class="admin-main">
     <header class="admin-topbar">
-      <div>
-        <h1>Panel administrativo</h1>
-        <p>Bienvenido de nuevo, <?= e($admin_name) ?></p>
+      <div class="admin-topbar-title">
+        <div>
+          <h1>Panel administrativo</h1>
+          <p>Bienvenido de nuevo, <?= e($admin_name) ?></p>
+        </div>
       </div>
-      <div class="admin-topbar-actions">
+      <button
+        class="admin-topbar-toggle"
+        type="button"
+        data-admin-topbar-toggle
+        aria-label="Mostrar opciones"
+        aria-expanded="false"
+      >
+        <span class="material-icons-round icon-open">expand_more</span>
+        <span class="material-icons-round icon-close">expand_less</span>
+      </button>
+      <div class="admin-topbar-actions" data-admin-topbar-actions>
         <label class="admin-search">
           <span class="material-icons-round">search</span>
           <input type="text" placeholder="Buscar..." aria-label="Buscar">
@@ -204,6 +232,21 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
               </a>
             </article>
 
+            <article class="admin-card" style="--accent:#0ea5e9; --accent-soft:#e0f2fe; --accent-border:rgba(14, 165, 233, 0.3);">
+              <div class="admin-card-top">
+                <div class="admin-card-icon">
+                  <span class="material-icons-round">slideshow</span>
+                </div>
+                <span class="<?= $hero_status_class ?>"><?= e($hero_status_label) ?></span>
+              </div>
+              <h3>Slider portada</h3>
+              <p>Configurar imagenes, textos y enlaces del hero principal.</p>
+              <a class="admin-card-link" href="<?= e(base_url('admin/hero_slider.php')) ?>">
+                Gestionar slider
+                <span class="material-icons-round">arrow_forward</span>
+              </a>
+            </article>
+
             <article class="admin-card" style="--accent:#10b981; --accent-soft:#d1fae5; --accent-border:rgba(16, 185, 129, 0.3);">
               <div class="admin-card-top">
                 <div class="admin-card-icon">
@@ -231,6 +274,20 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
                   <?= e($moderacion_label) ?>
                 </a>
               </div>
+            </article>
+
+            <article class="admin-card" style="--accent:#14b8a6; --accent-soft:#ccfbf1; --accent-border:rgba(20, 184, 166, 0.3);">
+              <div class="admin-card-top">
+                <div class="admin-card-icon">
+                  <span class="material-icons-round">group</span>
+                </div>
+              </div>
+              <h3>Usuarios y roles</h3>
+              <p>Administrar perfiles, roles y estados de los usuarios registrados.</p>
+              <a class="admin-card-link" href="<?= e(base_url('admin/usuarios.php')) ?>">
+                Gestionar usuarios
+                <span class="material-icons-round">arrow_forward</span>
+              </a>
             </article>
 
             <article class="admin-card admin-card--wide admin-card--row" style="--accent:#f97316; --accent-soft:#ffedd5; --accent-border:rgba(249, 115, 22, 0.3);">
@@ -294,6 +351,37 @@ $moderacion_class = $pending_experiencias > 0 ? 'admin-btn admin-btn--primary' :
   <span class="material-icons-round icon-light">light_mode</span>
 </button>
 
+<script>
+  (function () {
+    var body = document.body;
+    var toggle = document.querySelector('[data-admin-topbar-toggle]');
+    var actions = document.querySelector('[data-admin-topbar-actions]');
+    if (!toggle || !actions) return;
+    var storageKey = 'admin-topbar-open';
+
+    function setOpen(open, persist) {
+      var isDesktop = window.innerWidth > 900;
+      var nextOpen = isDesktop ? true : open;
+      body.classList.toggle('admin-topbar-open', nextOpen);
+      toggle.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      toggle.setAttribute('aria-label', nextOpen ? 'Ocultar opciones' : 'Mostrar opciones');
+      if (persist && !isDesktop) {
+        localStorage.setItem(storageKey, nextOpen ? 'open' : 'closed');
+      }
+    }
+
+    var stored = localStorage.getItem(storageKey);
+    setOpen(stored === 'open', false);
+
+    toggle.addEventListener('click', function () {
+      setOpen(!body.classList.contains('admin-topbar-open'), true);
+    });
+
+    window.addEventListener('resize', function () {
+      setOpen(localStorage.getItem(storageKey) === 'open', false);
+    });
+  })();
+</script>
 <script>
   (function () {
     var body = document.body;
