@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="col-12 d-grid"><button class="btn btn-primary">Registrarme</button></div>
       </form>
-      <p class="text-secondary small mt-3 mb-0">Si ya tienes cuenta, <a href="<?= e(base_url('login.php')) ?>">inicia sesiÃ³n</a>.</p>
+      <p class="text-secondary small mt-3 mb-0">Si ya tienes cuenta, <a href="<?= e(base_url('login.php')) ?>">inicia sesion</a>.</p>
     </div>
   </div>
 </main>

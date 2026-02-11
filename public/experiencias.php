@@ -59,7 +59,7 @@ $items = $stmt->fetchAll();
     <?php if (is_logged_in()): ?>
       <a class="btn btn-primary" href="<?= e(base_url('publicar_experiencia.php')) ?>">Publicar experiencia</a>
     <?php else: ?>
-      <a class="btn btn-primary" href="<?= e(base_url('login.php')) ?>">Iniciar sesiÃ³n para publicar</a>
+      <a class="btn btn-primary" href="<?= e(base_url('login.php')) ?>">Iniciar sesion para publicar</a>
     <?php endif; ?>
   </div>
 
