@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($id_destino <= 0 || !in_array($id_destino, $destino_ids, true)) $errors[] = "Seleccione un pais valido.";
   if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) $errors[] = "Ingrese un correo valido.";
   if (strlen($pass) < 8) $errors[] = "La contrasena debe tener al menos 8 caracteres.";
+  if (!preg_match('/[A-Z]/', $pass)) $errors[] = "La contrasena debe tener al menos 1 mayuscula.";
+  if (!preg_match('/[^A-Za-z0-9]/', $pass)) $errors[] = "La contrasena debe tener al menos 1 caracter especial.";
   if ($pass !== $pass2) $errors[] = "Las contrasenas no coinciden.";
 
   if (!$errors) {
@@ -168,8 +170,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="form-text">Si no subes una imagen, se asignara una foto por defecto.</div>
         </div>
         <div class="col-md-6">
-          <label class="form-label">Contrasena</label>
-          <input type="password" name="contrasena" class="form-control" required>
+          <label class="form-label" for="registro-pass">Contrasena</label>
+          <input type="password" name="contrasena" id="registro-pass" class="form-control" required autocomplete="new-password" aria-describedby="pass-requisitos">
+          <ul id="pass-requisitos" class="small text-secondary mb-0 mt-2 list-unstyled">
+            <li class="pass-rule text-danger" data-rule="length"><span class="pass-rule__state">[X]</span> Minimo 8 caracteres</li>
+            <li class="pass-rule text-danger" data-rule="upper"><span class="pass-rule__state">[X]</span> Al menos 1 mayuscula</li>
+            <li class="pass-rule text-danger" data-rule="special"><span class="pass-rule__state">[X]</span> Al menos 1 caracter especial</li>
+          </ul>
         </div>
         <div class="col-md-6">
           <label class="form-label">Confirmar contrasena</label>
@@ -274,9 +281,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     syncSelected();
   });
+
+  (function () {
+    var passInput = document.getElementById('registro-pass');
+    var rulesList = document.getElementById('pass-requisitos');
+    if (!passInput || !rulesList) return;
+
+    var ruleItems = rulesList.querySelectorAll('.pass-rule');
+    var ruleChecks = {
+      length: function (value) { return value.length >= 8; },
+      upper: function (value) { return /[A-Z]/.test(value); },
+      special: function (value) { return /[^A-Za-z0-9]/.test(value); }
+    };
+
+    function updatePasswordRules() {
+      var value = passInput.value || '';
+      var allValid = true;
+
+      ruleItems.forEach(function (item) {
+        var rule = item.getAttribute('data-rule');
+        var checker = ruleChecks[rule];
+        var ok = checker ? checker(value) : true;
+        var state = item.querySelector('.pass-rule__state');
+
+        if (state) state.textContent = ok ? '[OK]' : '[X]';
+        item.classList.toggle('text-success', ok);
+        item.classList.toggle('text-danger', !ok);
+        if (!ok) allValid = false;
+      });
+
+      passInput.setCustomValidity(allValid ? '' : 'La contrasena no cumple los requisitos.');
+    }
+
+    passInput.addEventListener('input', updatePasswordRules);
+    passInput.addEventListener('blur', updatePasswordRules);
+    updatePasswordRules();
+  })();
 </script>
 </body>
 </html>
-
-
 
